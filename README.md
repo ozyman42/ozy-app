@@ -1,3 +1,5 @@
+# Ozy App
+
 Welcome to the ozy app. My personal lifestyle management app.
 
 Over the years I've come to look at achievement as repetition of behaviors which, while not always successful,
@@ -11,4 +13,10 @@ Taking on life in this data-driven way where you're guaranteed to have a positiv
 
 This app helps keep track of all of life's averages. Eventually I would like to maintain additional biometric such as hormone levels, sleep quality, and turn into a metrics platform.
 
+# Technologies
+
 Built using Tauri, Nextjs, TypeScript, MonogoDB (database and serverless functions)
+Set up using the following guides:
+- https://next--tauri.netlify.app/next/guides/getting-started/prerequisites/linux
+- https://tauri.app/v1/guides/getting-started/setup/next-js
+- https://next--tauri.netlify.app/next/mobile/development/configuration
