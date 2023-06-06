@@ -20,3 +20,4 @@ Set up using the following guides:
 - https://next--tauri.netlify.app/next/guides/getting-started/prerequisites/linux
 - https://tauri.app/v1/guides/getting-started/setup/next-js
 - https://next--tauri.netlify.app/next/mobile/development/configuration
+- https://next--tauri.netlify.app/next/guides/distribution/sign-android

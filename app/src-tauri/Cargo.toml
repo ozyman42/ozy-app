@@ -1,3 +1,6 @@
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [package]
 name = "app"
 version = "0.1.0"

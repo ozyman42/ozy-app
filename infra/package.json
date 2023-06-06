@@ -1,0 +1,6 @@
+{
+    "name": "infra",
+    "scripts": {
+        "tf": ""
+    }
+}
