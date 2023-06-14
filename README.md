@@ -21,3 +21,8 @@ Set up using the following guides:
 - https://tauri.app/v1/guides/getting-started/setup/next-js
 - https://next--tauri.netlify.app/next/mobile/development/configuration
 - https://next--tauri.netlify.app/next/guides/distribution/sign-android
+
+# Android testing
+
+I'm using the tailscale free mesh vpn to connect codespaces with an android device
+https://developer.android.com/tools/adb#wireless-android11-command-line
