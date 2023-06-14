@@ -3,12 +3,14 @@
         "context": ".",
         "dockerfile": "./Dockerfile"
     },
+    "runArgs": ["--device=/dev/net/tun"],
     "features": {
         "desktop-lite": {
             "password": "vscode",
             "webPort": "6080",
             "vncPort": "5901"
-        }
+        },
+        "ghcr.io/tailscale/codespace": {}
     },
     "customizations": {
         "vscode": {
@@ -17,5 +19,6 @@
             }
         }
     },
-    "forwardPorts": [6080]
+    "forwardPorts": [6080],
+    "postStartCommand": "tailscale up --accept-routes"
 }
