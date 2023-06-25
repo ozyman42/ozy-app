@@ -15,14 +15,21 @@ This app helps keep track of all of life's averages. Eventually I would like to 
 
 # Technologies
 
-Built using Tauri, Nextjs, TypeScript, MonogoDB (database and serverless functions)
+Built using Ionic/Capacitor, Nextjs, TypeScript, Postgres + Drizzle
 Set up using the following guides:
-- https://next--tauri.netlify.app/next/guides/getting-started/prerequisites/linux
-- https://tauri.app/v1/guides/getting-started/setup/next-js
-- https://next--tauri.netlify.app/next/mobile/development/configuration
-- https://next--tauri.netlify.app/next/guides/distribution/sign-android
+- https://galaxies.dev/nextjs-and-capacitor
+- https://www.youtube.com/watch?v=1WNYYippEr0
 
 # Android testing
 
 I'm using the tailscale free mesh vpn to connect codespaces with an android device
 https://developer.android.com/tools/adb#wireless-android11-command-line
+
+# Codespaces
+
+Run the following on startup:
+- adb pair 100.74.112.61:45579
+- adb connect 100.74.112.61:46245
+- tailscale up --accept-routes // only need to run on codespace creation
+- In the 
+- ssh -R gui.dev.ozy.xyz:80:localhost:6080 serveo.net
