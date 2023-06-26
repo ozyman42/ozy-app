@@ -1,3 +1,6 @@
 {
-	"name": "root"
+	"name": "root",
+  "scripts": {
+    "dev:app": "pnpm --filter app dev"
+  }
 }

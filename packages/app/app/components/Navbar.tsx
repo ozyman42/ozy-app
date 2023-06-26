@@ -1,46 +1,20 @@
 'use client';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TabsContent } from '@radix-ui/react-tabs';
+import { Navigation, useStore } from '@/app/state';
 import * as React from 'react';
 
-export const navigation: Navigation = {
-  Health: {
-    Workouts: true,
-    Steps: true,
-    'Body Comp': true
-  },
-  Finance: {
-    Trading: {
-      Leverage: true,
-      Bybit: true,
-      TradingView: true
-    },
-    Taxes: true,
-    Debt: true,
-    Subscriptions: true
-  },
-  Social: {
-    Contacts: true
-  }
-} as const;
-
-interface Navigation {
-  [k: string]: true | Navigation;
-}
-
-export function Navbar({vals, depth}: {vals: Navigation, depth: number}) {
-  const valEntries = Object.entries(vals);
-  const [curVal, setCurVal] = React.useState(valEntries[0][0]);
-  const cur = vals[curVal];
+export function Navbar({path, nav}: {path: string[], nav: Navigation}) {
+  const {updateNav} = useStore(({updateNav}) => ({updateNav}));
+  const curChild = nav.children[nav.curChild];
+  const childPath = [...path, nav.curChild];
   return <>
     <div className='w-full'>
-      <Tabs value={curVal} className='w-full' onValueChange={v => {setCurVal(v);}}>
+      <Tabs value={nav.curChild} className='w-full' onValueChange={v => {updateNav(path, v)}}>
         <TabsList className={`w-full flex flex-row`}>
-          {valEntries.map(([route, nav]) => <TabsTrigger value={route} key={route} className='flex flex-grow'>{route}</TabsTrigger>)}
+          {Object.keys(nav.children).map((child) => <TabsTrigger value={child} key={child} className='flex flex-grow'>{child}</TabsTrigger>)}
         </TabsList>
-        <TabsContent value=''></TabsContent>
       </Tabs>
     </div>
-    {cur && cur !== true && <Navbar vals={cur} depth={depth + 1} key={curVal} />}
+    {curChild && !curChild.isPage && <Navbar nav={curChild.navigation} path={childPath} key={childPath.join(".")} />}
   </>
 }

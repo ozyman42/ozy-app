@@ -1,9 +1,12 @@
-import { Navbar } from './components/Navbar';
+'use client';
+import * as React from 'react';
+import { useStore } from '@/app/state';
+import { Navbar } from './components/Navbar'
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Hi!
-    </main>
-  )
+  const {navigation, curPage} = useStore(({navigation, curPage}) => ({navigation, curPage}));
+  return <>
+    <Navbar nav={navigation} path={[]} />
+    <curPage.page />
+  </>
 }

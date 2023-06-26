@@ -1,4 +1,3 @@
-import { Navbar, navigation } from './components/Navbar'
 import './globals.css'
 
 export const metadata = {
@@ -14,7 +13,6 @@ export default function RootLayout({
   return (
     <html lang="en" className='h-full overflow-hidden'>
       <body className='h-full'>
-        <Navbar vals={navigation} depth={0} />
         {children}
       </body>
     </html>
