@@ -25,6 +25,9 @@ Set up using the following guides:
 I'm using the tailscale free mesh vpn to connect codespaces with an android device
 https://developer.android.com/tools/adb#wireless-android11-command-line
 
+# Infra Guide
+- https://www.youtube.com/watch?v=9f0WghCYsEw
+
 # Codespaces
 
 Run the following on startup:
