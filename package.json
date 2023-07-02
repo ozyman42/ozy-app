@@ -1,6 +1,8 @@
 {
 	"name": "root",
   "scripts": {
-    "dev:app": "pnpm --filter app dev"
+    "app:dev": "pnpm --filter app dev",
+    "infra:plan": "pnpm --filter infra exec cdktf plan",
+    "infra:apply": "pnpm --filter infra exec cdktf deploy --auto-approve"
   }
 }
