@@ -4,7 +4,7 @@
   "projectId": "3d3698b2-cf89-4481-83f5-c598ba0315ae",
   "sendCrashReports": "false",
   "terraformProviders": [
-    
+    "cockroachdb/cockroach"
   ],
   "terraformModules": [],
   "context": {

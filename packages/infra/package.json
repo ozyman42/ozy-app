@@ -1,5 +1,5 @@
 {
-  "name": "infra",
+  "name": "@ozy/infra",
   "version": "1.0.0",
   "main": "main.js",
   "types": "main.ts",
@@ -14,14 +14,15 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "upgrade": "npm i cdktf@latest cdktf-cli@latest",
-    "upgrade:next": "npm i cdktf@next cdktf-cli@next"
+    "upgrade:next": "npm i cdktf@next cdktf-cli@next",
+    "gcloud:write-auth": "node setup-gcloud.js"
   },
   "engines": {
     "node": ">=16.0"
   },
   "dependencies": {
+    "@ozy/constants": "workspace:*",
     "@cdktf/provider-google": "7.0.11",
-    "@cdktf/provider-mongodbatlas": "^4.0.0",
     "cdktf": "^0.16.3",
     "constructs": "^10.2.62",
     "uuid": "^9.0.0"

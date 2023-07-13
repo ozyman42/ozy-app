@@ -1,0 +1,7 @@
+{
+  "name": "@ozy/constants",
+  "main": "src",
+  "devDependencies": {
+    "@types/node": "^20.3.3"
+  }
+}
