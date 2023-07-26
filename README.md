@@ -33,6 +33,12 @@ https://developer.android.com/tools/adb#wireless-android11-command-line
 Run the following on startup:
 - adb pair 100.74.112.61:45579
 - adb connect 100.74.112.61:46245
+
+TODOS:
+- switch from IP to phone.ozy.xyz
+- auto detect ports for pairing and connecting https://stackoverflow.com/questions/65991502/adb-over-wi-fi-android-11-on-windows-how-to-keep-a-fixed-port-or-connect-aut
+
+# Old (don't use this anymore)
 - tailscale up --accept-routes // only need to run on codespace creation
 - In the 
 - ssh -R gui.dev.ozy.xyz:80:localhost:6080 serveo.net

@@ -1,4 +1,4 @@
-package xyz.ozy.app;
+package xyz.ozy.beta;
 
 import com.getcapacitor.BridgeActivity;
 

@@ -1,10 +1,10 @@
 {
-  "appId": "xyz.ozy.app",
-  "appName": "Ozy App",
+  "appId": "xyz.ozy.beta",
+  "appName": "Ozy (Beta)",
   "webDir": "out",
   "bundledWebRuntime": false,
   "server": {
-    "url": "http://100.123.213.135:3000",
+    "url": "http://beta.ozy.xyz",
     "cleartext": true
   }
 }

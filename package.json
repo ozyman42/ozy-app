@@ -1,7 +1,10 @@
 {
 	"name": "root",
   "scripts": {
+    "app:deploy:dev": "pnpm --filter @ozy/app app:deploy:dev",
     "app:dev": "pnpm --filter @ozy/app dev",
+    "app:regen:dev": "pnpm --filter @ozy/app app:regen:dev",
+    "app:regen:prod": "pnpm --filter @ozy/app app:regen:prod",
     "infra:plan": "pnpm --filter @ozy/infra exec cdktf plan",
     "infra:apply": "pnpm --filter @ozy/infra exec cdktf deploy --auto-approve"
   }

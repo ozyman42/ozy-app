@@ -10,7 +10,7 @@ export function Navbar({path, nav}: {path: string[], nav: Navigation}) {
   return <>
     <div className='w-full'>
       <Tabs value={nav.curChild} className='w-full' onValueChange={v => {updateNav(path, v)}}>
-        <TabsList className={`w-full flex flex-row`}>
+        <TabsList className={`w-full flex flex-row rounded-none`}>
           {Object.keys(nav.children).map((child) => <TabsTrigger value={child} key={child} className='flex flex-grow'>{child}</TabsTrigger>)}
         </TabsList>
       </Tabs>
