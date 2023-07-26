@@ -43,4 +43,12 @@ pngToIco(iconPath)
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="https" android:host="beerswift.app" />
     </intent-filter>
+    Also on https://capacitorjs.com/docs/apis/app#android
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+        <data android:scheme="@string/custom_url_scheme" />
+    </intent-filter>
+    
 */
