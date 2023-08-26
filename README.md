@@ -25,9 +25,6 @@ Set up using the following guides:
 I'm using the tailscale free mesh vpn to connect codespaces with an android device
 https://developer.android.com/tools/adb#wireless-android11-command-line
 
-# Infra Guide
-- https://www.youtube.com/watch?v=9f0WghCYsEw
-
 # Codespaces
 
 Run the following on startup:
@@ -38,7 +35,6 @@ TODOS:
 - switch from IP to phone.ozy.xyz
 - auto detect ports for pairing and connecting https://stackoverflow.com/questions/65991502/adb-over-wi-fi-android-11-on-windows-how-to-keep-a-fixed-port-or-connect-aut
 
-# Old (don't use this anymore)
-- tailscale up --accept-routes // only need to run on codespace creation
-- In the 
-- ssh -R gui.dev.ozy.xyz:80:localhost:6080 serveo.net
+# Bind a public domain to the codespace
+- tailscale up --accept-routes
+- ssh -R beta.ozy.xyz:80:localhost:6080 serveo.net
