@@ -1,7 +1,5 @@
 import './globals.css'
 import { APP_DISPLAY_NAME } from '@ozy/constants';
-// https://clerk.com/docs/nextjs/get-started-with-nextjs?utm_source=www.google.com&utm_medium=referral&utm_campaign=none
-import { ClerkProvider } from '@clerk/nextjs';
 import { headers } from 'next/headers';
 import { CurPath } from './components/CurPath';
 
@@ -17,16 +15,14 @@ export default function RootLayout({
 }) {
   const reqHeaders = headers();
   return (
-    <ClerkProvider>
-      <html lang="en" className='h-full overflow-hidden'>
-        <body className='h-full'>
-          <pre className='absolute bottom-0'>
-            <CurPath /><br />
-            {reqHeaders.get('next-url')}
-          </pre>
-          {children}
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className='h-full overflow-hidden'>
+      <body className='h-full'>
+        <pre className='absolute bottom-0'>
+          <CurPath /><br />
+          {reqHeaders.get('next-url')}
+        </pre>
+        {children}
+      </body>
+    </html>
   )
 }

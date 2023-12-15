@@ -36,5 +36,5 @@ TODOS:
 - auto detect ports for pairing and connecting https://stackoverflow.com/questions/65991502/adb-over-wi-fi-android-11-on-windows-how-to-keep-a-fixed-port-or-connect-aut
 
 # Bind a public domain to the codespace
-- tailscale up --accept-routes
+- tailscale up --accept-routes --operator=$USER
 - ssh -R beta.ozy.xyz:80:localhost:6080 serveo.net

@@ -5,3 +5,4 @@ export const DB_USER_NAME = `${DB_NAME}-user`;
 export const DB_USER_PASSWORD = process.env.OZY_COCKROACH_DB_USER_PASSWORD;
 export const MONGO_ORG_ID = '6403bde30b7bf303e9f560c8';
 export const INFRA_REGION = 'CENTRAL_US';
+export const APP_VERSION = process.env.APP_VERSION
