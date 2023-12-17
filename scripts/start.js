@@ -21,7 +21,7 @@ function run(name, command, env) {
         const lines = outStream.line.split("\n");
         outStream.line = lines.pop() ?? "";
         for (const line of lines) {
-            outStream.stream.write(`[${name}][${streamId}] ${line}`);
+            outStream.stream.write(`[${name}][${streamId}] ${line}\n`);
         }
     }
     function onEnd(streamId) {
@@ -32,6 +32,7 @@ function run(name, command, env) {
     const finalCommand = 
         testingDockerContainer ? `${command} > /tmp/${name.replaceAll(" ", "-")}.txt 2>&1` :
         command;
+    console.log(`[${name}] STARTING (${finalCommand})`);
     const proc = child_process.exec(finalCommand, {
         env: Object.assign({}, process.env, env || {})
     });
