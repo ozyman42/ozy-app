@@ -2,7 +2,7 @@ const child_process = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
-const testingDockerContainer = true;
+const testingDockerContainer = false;
 
 function run(name, command, env) {
     const out = {
