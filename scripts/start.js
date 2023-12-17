@@ -12,7 +12,7 @@ function run(name, command, env) {
         },
         err: {
             line: "",
-            process: process.stderr
+            stream: process.stderr
         }
     };
     function onData(data, streamId) {
@@ -42,7 +42,7 @@ function run(name, command, env) {
         onData(data.toString(), 'err');
     });
     proc.on('close', (code) => {
-        ['out', 'err'].forEach(onEnd);
+        Object.keys(out).forEach(onEnd);
         console.log(`[${name}] EXITED WITH CODE ${code}`);
         process.exit(1);
     });
