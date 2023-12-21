@@ -1,15 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-
-const nextConfig = {};
-/**
- *
- *reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    unoptimized: true
-  },
-  output: 'export'
-  */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+}
 
 module.exports = nextConfig
