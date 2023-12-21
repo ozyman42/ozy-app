@@ -15,5 +15,7 @@ COPY . .
 RUN pnpm install
 WORKDIR /home/ozy/app/packages/app
 RUN echo "APP_VERSION=prod" > .env.local
+# https://www.reddit.com/r/Tailscale/comments/11hbe1n/install_tailscale_as_a_container_vs_on_host_for/jb0oyzp/?context=3
+ENV TS_STATE_DIR /tmp/tsd-state
 RUN pnpm next build
 CMD ["node", "../../scripts/start.js"]

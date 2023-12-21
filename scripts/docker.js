@@ -5,6 +5,8 @@ function run(cmd) {
     execSync(cmd, {stdio: 'inherit'});
 }
 
+// for full clean run
+// docker system prune -f
 execSync(`docker images --filter "dangling=true" -q --no-trunc`)
     .toString()
     .split("\n")
@@ -14,4 +16,4 @@ execSync(`docker images --filter "dangling=true" -q --no-trunc`)
         execSync(`docker rmi ${sha}`, {stdio: 'inherit'});
     });
 run("docker build . -t test");
-run("docker run -it --rm --entrypoint sh -p 8080:80 -e TAIL_SCALE_AUTH_KEY test");
+run("docker run -it --rm --entrypoint sh -p 8080:80 -p 8030:3000 -e TAIL_SCALE_AUTH_KEY test");

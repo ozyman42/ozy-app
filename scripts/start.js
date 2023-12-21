@@ -4,7 +4,8 @@ const fs = require('fs');
 
 const testingDockerContainer = false;
 
-function run(name, command, env) {
+function run(name, command, env, opts = {mayExit: false, pipeOut: true}) {
+    const {mayExit, pipeOut} = opts;
     const out = {
         out: {
             line: "",
@@ -21,7 +22,9 @@ function run(name, command, env) {
         const lines = outStream.line.split("\n");
         outStream.line = lines.pop() ?? "";
         for (const line of lines) {
-            outStream.stream.write(`[${name}][${streamId}] ${line}\n`);
+            if (pipeOut) {
+                outStream.stream.write(`[${name}][${streamId}] ${line}\n`);
+            }
         }
     }
     function onEnd(streamId) {
@@ -45,7 +48,10 @@ function run(name, command, env) {
     proc.on('close', (code) => {
         Object.keys(out).forEach(onEnd);
         console.log(`[${name}] EXITED WITH CODE ${code}`);
-        process.exit(1);
+        if (!mayExit) {
+            console.log(`exiting due to ${name}`);
+            process.exit(1);
+        }
     });
 }
 
@@ -55,11 +61,28 @@ async function start() {
     run("tsd", "tailscaled --tun=userspace-networking --socks5-server=localhost:1055");
     console.log('waiting 5 seconds');
     await (new Promise(resolve => {setTimeout(resolve, 5000);}));
-    run("tsup", "tailscale up --hostname=ozy-app --accept-routes --auth-key=$TAIL_SCALE_AUTH_KEY");
+    run("tsup", "tailscale up --hostname=ozy-app --accept-routes --auth-key=$TAIL_SCALE_AUTH_KEY", {}, {mayExit: true, pipeOut: false});
     run("next app", "pnpm next start");
     run("envoy", "envoy -c ../../fwd-proxy/envoy.yaml");
+    // keep it running
+    return new Promise(resolve => {});
 }
 // to ping the services run
 // wget -qO- http://codespace.ozy.xyz:3000/api/health
 
-start().catch(e => {console.log(e); process.exit(1);}).finally(() => {process.exit(0)});
+start()
+    .catch(e => {
+        console.log("CATCH BLOCK HIT");
+        console.log(e);
+        process.exit(1);
+    })
+    .finally(() => {
+        console.log("FINALLY BLOCK HIT");
+        process.exit(0);
+    });
+
+// Hack to prevent silent exit
+// https://stackoverflow.com/questions/6442676/how-to-prevent-node-js-from-exiting-while-waiting-for-a-callback
+(function wait () {
+    setTimeout(wait, 1000);
+})();
