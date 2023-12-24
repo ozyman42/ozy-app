@@ -1,4 +1,4 @@
-FROM alpine:3.7 as redsocks_binary
+FROM alpine:3.18.5 as redsocks_binary
 RUN apk update && apk add build-base curl libevent-dev iptables-dev bash ca-certificates \
   && curl -fsSL https://github.com/darkk/redsocks/archive/release-0.5.tar.gz | tar xz \
   && make -C redsocks-release-0.5/
@@ -9,7 +9,7 @@ FROM node:alpine3.18
 RUN corepack prepare pnpm@8.7.1 --activate
 RUN corepack enable
 COPY --from=redsocks_binary /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1
-COPY --from=redsocks_binary /usr/lib/libevent_core-2.1.so.6 /usr/lib/libevent_core-2.1.so.6
+COPY --from=redsocks_binary /usr/lib/libevent_core-2.1.so.7 /usr/lib/libevent_core-2.1.so.7
 COPY --from=redsocks_binary /redsocks-release-0.5/redsocks /usr/local/bin/redsocks
 COPY --from=tailscale_binary /usr/local/bin /usr/local/bin
 COPY --from=envoy_binary /usr/local/bin/envoy /usr/local/bin/envoy
