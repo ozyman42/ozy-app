@@ -67,6 +67,7 @@ async function start() {
     await (new Promise(resolve => {setTimeout(resolve, 5000);}));
     run("tsup", "tailscale up --hostname=ozy-app --accept-routes --auth-key=$TAIL_SCALE_AUTH_KEY", {}, {mayExit: true, pipeOut: false});
     run("next app", "pnpm next start");
+    run("redsocks", "redsocks -c ../../fwd-proxy/redsocks.conf")
     run("envoy", "envoy -c ../../fwd-proxy/envoy.yaml");
     // keep it running
     return new Promise(resolve => {});
