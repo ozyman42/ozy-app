@@ -55,6 +55,10 @@ function run(name, command, env, opts = {mayExit: false, pipeOut: true}) {
     });
 }
 
+// https://tailscale.com/kb/1112/userspace-networking
+// https://tailscale.com/kb/1108/cloudrun
+// https://github.com/envoyproxy/envoy/issues/21175
+
 async function start() {
     // for running async add the following to the end 
     // > /tmp/some_file 2>&1 &
