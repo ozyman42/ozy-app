@@ -6,6 +6,23 @@ const ingressPort = parseInt(process.argv[2]);
 const destinationUrl = process.argv[3];
 const socksAgent = new SocksProxyAgent(socksProxy);
 const proxy = httpProxy.createProxyServer({});
+// Error handling for the proxy
+proxy.on('error', (err, req, res) => {
+  console.error('Proxy error:', err.message);
+
+  let problem = '';
+  if (!res.headersSent) {
+    if (err.code === 'ECONNREFUSED') {
+      problem = 'Bad Gateway';
+      res.writeHead(502);
+    } else {
+      problem = 'Internal Server Error';
+      res.writeHead(500);
+    }
+  }
+
+  res.end({problem, cause: err.message});
+});
 const server = http.createServer((req, res) => {
   proxy.web(req, res, { agent: socksAgent, target: destinationUrl, changeOrigin: true });
 });

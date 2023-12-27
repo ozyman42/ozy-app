@@ -1,4 +1,5 @@
 import nodeFetch from 'node-fetch';
+import { DEV_PASSTHROUGH_HOSTNAME } from '@ozy/constants';;
 
 export type DevServerStatus = {
     code: number;
@@ -7,7 +8,7 @@ export type DevServerStatus = {
 
 export async function getDevServerStatus(): Promise<DevServerStatus> {
     try {
-        const versionResponse = await nodeFetch("http://codespace.ozy.xyz:3000/api/version");
+        const versionResponse = await nodeFetch(`http://${DEV_PASSTHROUGH_HOSTNAME}/api/version`, {signal: AbortSignal.timeout(2000)});
         const text = await versionResponse.text();
         const code = versionResponse.status;
         return {text, code};
