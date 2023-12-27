@@ -70,7 +70,7 @@ async function start() {
   console.log(`waiting ${secondsToWait} seconds`);
   await (new Promise(resolve => {setTimeout(resolve, 1000 * secondsToWait);}));
   run("tsup", "tailscale up --hostname=$TAIL_SCALE_MACHINE_NAME --accept-routes --auth-key=$TAIL_SCALE_AUTH_KEY", {}, {mayExit: true, pipeOut: false});
-  run("next app", "pnpm next start");
+  run("next app", "pnpm next start", {PORT: 3000});
   run("http2socks5", "node ../../scripts/socks-passthrough.js 4000 http://codespace.ozy.xyz:3000");
   run("envoy", "envoy -c ../../fwd-proxy/envoy.yaml");
   // keep it running
