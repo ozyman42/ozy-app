@@ -32,6 +32,8 @@ function run(name, command, env, opts = {mayExit: false, pipeOut: true}) {
             onData("\n", streamId);
         }
     }
+    // for running async and writing each to its own file we add the following to the end 
+    // > /tmp/some_file 2>&1 &
     const finalCommand = 
         testingDockerContainer ? `${command} > /tmp/${name.replaceAll(" ", "-")}.txt 2>&1` :
         command;
@@ -55,22 +57,24 @@ function run(name, command, env, opts = {mayExit: false, pipeOut: true}) {
     });
 }
 
-// https://tailscale.com/kb/1112/userspace-networking
-// https://tailscale.com/kb/1108/cloudrun
-// https://github.com/envoyproxy/envoy/issues/21175
-
 async function start() {
-    // for running async add the following to the end 
-    // > /tmp/some_file 2>&1 &
-    run("tsd", "tailscaled --tun=userspace-networking --socks5-server=localhost:1055");
-    console.log('waiting 5 seconds');
-    await (new Promise(resolve => {setTimeout(resolve, 5000);}));
-    run("tsup", "tailscale up --hostname=ozy-app --accept-routes --auth-key=$TAIL_SCALE_AUTH_KEY", {}, {mayExit: true, pipeOut: false});
-    run("next app", "pnpm next start");
-    run("redsocks", "redsocks -c ../../fwd-proxy/redsocks.conf")
-    run("envoy", "envoy -c ../../fwd-proxy/envoy.yaml");
-    // keep it running
-    return new Promise(resolve => {});
+  const tailScaleDir = path.resolve('/var/lib/tailscale');
+  fs.mkdirSync(tailScaleDir, {recursive: true});
+  fs.writeFileSync(
+    path.resolve(tailScaleDir, 'tailscaled.state'),
+    process.env.TAIL_SCALE_STATE
+  );
+  // https://tailscale.com/kb/1112/userspace-networking
+  run("tsd", "tailscaled --tun=userspace-networking --socks5-server=localhost:1055");
+  const secondsToWait = 5;
+  console.log(`waiting ${secondsToWait} seconds`);
+  await (new Promise(resolve => {setTimeout(resolve, 1000 * secondsToWait);}));
+  run("tsup", "tailscale up --hostname=$TAIL_SCALE_MACHINE_NAME --accept-routes --auth-key=$TAIL_SCALE_AUTH_KEY", {}, {mayExit: true, pipeOut: false});
+  run("next app", "pnpm next start");
+  run("http2socks5", "node ../../scripts/socks-passthrough.js 4000 http://codespace.ozy.xyz:3000");
+  run("envoy", "envoy -c ../../fwd-proxy/envoy.yaml");
+  // keep it running
+  return new Promise(resolve => {});
 }
 // to ping the services run
 // wget -qO- http://codespace.ozy.xyz:3000/api/health

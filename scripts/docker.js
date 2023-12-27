@@ -2,7 +2,7 @@ const { execSync } = require('child_process');
 
 function run(cmd) {
     console.log('running', cmd);
-    execSync(cmd, {stdio: 'inherit'});
+    execSync(cmd, {stdio: 'inherit', env: process.env});
 }
 
 // for full clean run
@@ -15,5 +15,13 @@ execSync(`docker images --filter "dangling=true" -q --no-trunc`)
     .forEach(sha => {
         execSync(`docker rmi ${sha}`, {stdio: 'inherit'});
     });
-run("docker build . -t test");
-run("docker run -it --rm --entrypoint sh -p 8080:80 -p 8030:3000 -e TAIL_SCALE_AUTH_KEY test");
+const imageName = 'test';
+run(`docker build . -t ${imageName}`);
+run([
+  "docker run -it --rm --entrypoint sh",
+  "-p 8080:80 -p 8030:3000",
+  "-e TAIL_SCALE_AUTH_KEY",
+  "-e TAIL_SCALE_STATE",
+  "-e TAIL_SCALE_MACHINE_NAME",
+  imageName
+].join(" "));

@@ -8,5 +8,9 @@
     "app:regen:prod": "pnpm --filter @ozy/app app:regen:prod",
     "infra:plan": "pnpm --filter @ozy/infra exec cdktf plan",
     "infra:apply": "pnpm --filter @ozy/infra exec cdktf deploy --auto-approve"
+  },
+  "dependencies": {
+    "socks-proxy-agent": "8.0.2",
+    "http-proxy": "1.18.1"
   }
 }
