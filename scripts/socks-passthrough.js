@@ -28,7 +28,13 @@ const server = http.createServer((req, res) => {
 });
 server.on('upgrade', (req, socket, head) => {
   // Proxy WebSocket requests
-  proxy.ws(req, socket, head, { agent: socksAgent, target: destinationUrl });
+  console.log('Attempting to upgrade WebSocket connection');
+  proxy.ws(req, socket, head, { agent: socksAgent, target: destinationUrl }, (err) => {
+    if (err) {
+      console.error('WebSocket proxy error:', err);
+      socket.end();
+    }
+  });
 });
 server.listen(ingressPort, () => {
   console.log(`Proxy server listening on port ${ingressPort}`);

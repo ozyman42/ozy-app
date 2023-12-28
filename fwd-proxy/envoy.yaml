@@ -58,6 +58,8 @@ static_resources:
                                   contains: "env=dev"
                           route:
                             cluster: dev_cluster
+                            upgrade_configs:
+                              - upgrade_type: websocket
                 http_filters:
                   - name: envoy.filters.http.router
 #          transport_socket:
