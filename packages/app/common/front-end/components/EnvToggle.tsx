@@ -40,7 +40,7 @@ export function EnvToggle() {
         async function getEnv() {
             try {
                 const {version} = await (await fetch('/api/version')).json();
-                if (curEnv !== version) {
+                if (curEnv !== undefined && curEnv !== version) {
                     setSwitching(false);
                     reload();   
                 }
