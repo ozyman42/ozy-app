@@ -26,15 +26,24 @@ function oppositeEnv(env: string) {
     return ENVS[(idx + 1) % ENVS.length];
 }
 
+function reload() {
+    window.location.reload();
+}
+
 export function EnvToggle() {
     const [curEnv, setCurEnv] = React.useState<string | undefined>(undefined);
     const [curDevStatus, setCurDevStatus] = React.useState<string | undefined>(undefined);
     const [devStatusError, setDevStatusError] = React.useState<string | undefined>(undefined);
     const [envError, setEnvError] = React.useState<string | undefined>(undefined);
+    const [switching, setSwitching] = React.useState(false);
     React.useEffect(() => {
         async function getEnv() {
             try {
                 const {version} = await (await fetch('/api/version')).json();
+                if (curEnv !== version) {
+                    setSwitching(false);
+                    reload();   
+                }
                 setCurEnv(version);
                 setEnvError(undefined);
             } catch(e) {
@@ -56,13 +65,12 @@ export function EnvToggle() {
             getDevStatus();
         }, 5000);
         return () => { clearInterval(intervalId); }
-    }, []);
+    }, [curEnv]);
     const envToToggleTo = curEnv ? oppositeEnv(curEnv) : 'prod';
     async function toggleEnv(to: string) {
+        if (switching) return;
         await fetch(`/set-cookie-${to}`);
-    }
-    function reload() {
-        window.location.reload();
+        setSwitching(true);
     }
     return <div>
         <Status name='dev' status={curDevStatus} badStatus='offline'/>
@@ -70,10 +78,10 @@ export function EnvToggle() {
         <Status name='env' status={curEnv} />
         {/*envError && <Error error={envError} />*/}
         <button className="btn btn-xs m-1 btn-outline" onClick={() => {toggleEnv(envToToggleTo);}}>
-            Switch to <b>{envToToggleTo}</b>
+            Switch{switching ? 'ing' : ''} to <b>{envToToggleTo}</b>{switching && <Loading />}
         </button>
-        <button className="btn btn-xs m-1 btn-outline" onClick={() => {reload();}}>
+        {/*<button className="btn btn-xs m-1 btn-outline" onClick={() => {reload();}}>
             Reload
-        </button>
+        </button>*/}
     </div>
 }

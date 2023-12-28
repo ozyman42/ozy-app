@@ -26,6 +26,10 @@ proxy.on('error', (err, req, res) => {
 const server = http.createServer((req, res) => {
   proxy.web(req, res, { agent: socksAgent, target: destinationUrl, changeOrigin: true });
 });
+server.on('upgrade', (req, socket, head) => {
+  // Proxy WebSocket requests
+  proxy.ws(req, socket, head, { agent: socksAgent, target: destinationUrl });
+});
 server.listen(ingressPort, () => {
   console.log(`Proxy server listening on port ${ingressPort}`);
   console.log('Forwarding to', destinationUrl);

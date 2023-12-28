@@ -26,7 +26,7 @@ export const navigation: Navigation = {
               curChild: 'Bybit',
               children: {
                 Leverage: {isPage: true, page: () => <div>leverage page</div>},
-                Bybit: {isPage: true, page: () => <div>bybit time</div>},
+                Bybit: {isPage: true, page: () => <div>Shows open positions!</div>},
                 TradingView: {isPage: true, page: () => <div>trading view chart??</div>}
               }
             }
