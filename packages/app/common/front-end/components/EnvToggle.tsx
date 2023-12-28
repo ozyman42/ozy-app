@@ -66,10 +66,10 @@ export function EnvToggle() {
         }, 5000);
         return () => { clearInterval(intervalId); }
     }, [curEnv]);
-    const envToToggleTo = curEnv ? oppositeEnv(curEnv) : 'prod';
-    async function toggleEnv(to: string) {
+    async function toggleEnv() {
+        if (!curEnv) return;
         if (switching) return;
-        await fetch(`/set-cookie-${to}`);
+        await fetch(`/set-cookie-${oppositeEnv(curEnv)}`);
         setSwitching(true);
     }
     return <div>
@@ -77,8 +77,11 @@ export function EnvToggle() {
         {/*devStatusError && <Error error={devStatusError} />*/}
         <Status name='env' status={curEnv} />
         {/*envError && <Error error={envError} />*/}
-        <button className="btn btn-xs m-1 btn-outline" onClick={() => {toggleEnv(envToToggleTo);}}>
-            Switch{switching ? 'ing' : ''} to <b>{envToToggleTo}</b>{switching && <Loading />}
+        <button className="btn btn-xs m-1 btn-outline" onClick={() => {toggleEnv();}}>
+            {curEnv && <>
+                Switch{switching ? 'ing' : ''} to <b>{oppositeEnv(curEnv)}</b>{switching && <Loading />}
+            </>}
+            {!curEnv && <Loading />}
         </button>
         {/*<button className="btn btn-xs m-1 btn-outline" onClick={() => {reload();}}>
             Reload

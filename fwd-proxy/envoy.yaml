@@ -47,19 +47,21 @@ static_resources:
                             headers:
                               - name: cookie
                                 string_match:
-                                  contains: "env=prod"
-                          route:
-                            cluster: prod_cluster
-                        - match:
-                            prefix: "/"
-                            headers:
-                              - name: cookie
-                                string_match:
                                   contains: "env=dev"
                           route:
                             cluster: dev_cluster
                             upgrade_configs:
                               - upgrade_type: websocket
+                        - match:
+                            prefix: "/"
+                            # We also want to go to prod when there's no cookie
+                            # So comment out below lines
+                            # headers:
+                            #  - name: cookie
+                            #    string_match:
+                            #      contains: "env=prod"
+                          route:
+                            cluster: prod_cluster
                 http_filters:
                   - name: envoy.filters.http.router
 #          transport_socket:
