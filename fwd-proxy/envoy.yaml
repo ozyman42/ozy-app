@@ -39,6 +39,10 @@ static_resources:
                                 key: "Set-Cookie"
                                 value: "env=prod; HttpOnly"
                         - match:
+                            prefix: "/api/health/dev"
+                          route:
+                            cluster: prod_cluster
+                        - match:
                             prefix: "/"
                             headers:
                               - name: cookie

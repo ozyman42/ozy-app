@@ -9,19 +9,19 @@ const proxy = httpProxy.createProxyServer({});
 // Error handling for the proxy
 proxy.on('error', (err, req, res) => {
   console.error('Proxy error:', err.message);
-
   let problem = '';
+  let status = 0;
   if (!res.headersSent) {
     if (err.code === 'ECONNREFUSED') {
       problem = 'Bad Gateway';
-      res.writeHead(502);
+      status = 502;
     } else {
       problem = 'Internal Server Error';
-      res.writeHead(500);
+      status = 500;
     }
   }
-
-  res.end({problem, cause: err.message});
+  res.writeHead(status, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify({problem, cause: err.message}));
 });
 const server = http.createServer((req, res) => {
   proxy.web(req, res, { agent: socksAgent, target: destinationUrl, changeOrigin: true });

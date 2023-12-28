@@ -65,7 +65,7 @@ async function start() {
     process.env.TAIL_SCALE_STATE
   );
   // https://tailscale.com/kb/1112/userspace-networking
-  run("tsd", "tailscaled --tun=userspace-networking --socks5-server=localhost:1055");
+  run("tsd", "tailscaled --tun=userspace-networking --socks5-server=localhost:1055", {}, {mayExit: false, pipeOut: false});
   const secondsToWait = 5;
   console.log(`waiting ${secondsToWait} seconds`);
   await (new Promise(resolve => {setTimeout(resolve, 1000 * secondsToWait);}));
