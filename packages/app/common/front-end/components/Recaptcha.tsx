@@ -29,8 +29,6 @@ export function reset(uniqueAction: string) {
     }
 }
 
-console.log('recaptcha site key', process.env.NEXT_PUBLIC_RECAPTCHA_ID);
-
 export function Recaptcha({error, uniqueAction, dark, onToken, siteKey}: RecaptchaProps) {
     const [token, setToken] = React.useState("");
     React.useEffect(() => {

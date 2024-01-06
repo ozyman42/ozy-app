@@ -14,7 +14,7 @@ export async function validateCaptcha(token: string): Promise<boolean> {
         assessment: {
             event: {
                 token,
-                siteKey: process.env.NEXT_PUBLIC_RECAPTCHA_ID,
+                siteKey: process.env.RECAPTCHA_ID,
             },
         },
         parent: projectPath,

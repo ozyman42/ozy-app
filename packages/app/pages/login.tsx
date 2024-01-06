@@ -7,7 +7,11 @@ import { LoginError, LoginRequest, LoginResponse, SIGN_UP_RECAPTCHA_ACTION, Sign
 import * as React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 
-export default function Login() {
+type LoginProps = {
+    recaptchaSiteKey: string
+}
+
+export default function Login({recaptchaSiteKey}: LoginProps) {
     const [loginUsername, setLoginUsername] = React.useState("");
     const [loginTOTP, setLoginTOTP] = React.useState("");
     const [loginUsernameErorr, setLoginUsernameError] = React.useState("");
@@ -119,7 +123,7 @@ export default function Login() {
                     <div className="divider">or</div>
                     <TextInput inputName='username' onChange={setSignUpUsername} value={signUpUsername} error={signUpUsernameError} />
                     <Recaptcha 
-                        siteKey={process.env.NEXT_PUBLIC_RECAPTCHA_ID!}
+                        siteKey={recaptchaSiteKey}
                         uniqueAction={SIGN_UP_RECAPTCHA_ACTION}
                         onToken={setRecaptchaResponse} 
                         dark={false}
@@ -158,4 +162,11 @@ export default function Login() {
             </div>
         </div>
     </div>
+}
+
+export async function getServerSideProps() {
+    const props: LoginProps= {
+        recaptchaSiteKey: process.env.RECAPTCHA_ID!
+    };
+    return { props };
 }
