@@ -3,7 +3,7 @@ import { Recaptcha, reset } from '@/common/front-end/components/Recaptcha';
 import { SubmitButton } from '@/common/front-end/components/SubmitButton';
 import { ErrorText } from '@/common/front-end/components/ErrorText';
 import { TextInput } from '@/common/front-end/components/TextInput';
-import { LoginError, LoginRequest, LoginResponse, SIGN_UP_RECAPTCHA_ACTION, SignUpError, SignUpRequest, SignUpResponse, TEST_TOTP_KEY } from '@/common/universal/api-interfaces';
+import { LoginError, LoginRequest, LoginResponse, SIGN_UP_RECAPTCHA_ACTION, SignUpError, SignUpRequest, SignUpResponse } from '@/common/universal/api-interfaces';
 import * as React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 
