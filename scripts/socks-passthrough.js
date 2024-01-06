@@ -8,7 +8,7 @@ const socksAgent = new SocksProxyAgent(socksProxy);
 const proxy = httpProxy.createProxyServer({});
 // Error handling for the proxy
 proxy.on('error', (err, req, res) => {
-  console.error('Proxy error:', err.message);
+  //console.error('Proxy error:', err.message);
   let problem = '';
   let status = 0;
   if (!res.headersSent) {
@@ -31,7 +31,7 @@ server.on('upgrade', (req, socket, head) => {
   console.log('Attempting to upgrade WebSocket connection');
   proxy.ws(req, socket, head, { agent: socksAgent, target: destinationUrl }, (err) => {
     if (err) {
-      console.error('WebSocket proxy error:', err);
+      //console.error('WebSocket proxy error:', err);
       socket.end();
     }
   });

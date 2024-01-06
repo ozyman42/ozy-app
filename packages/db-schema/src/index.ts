@@ -1,6 +1,14 @@
-import { pgTable, integer, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import * as schemaDefs from './schema';
+import { Client } from 'pg';
 
-export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
-  
-})
+const client = new Client({connectionString: process.env.OZY_POSTGRES_URL});
+
+async function getDB() {
+    await client.connect();
+    return drizzle(client, {schema: schemaDefs});
+}
+
+export const dbPromise = getDB();
+export const schema = schemaDefs;
+export * as drizzle from 'drizzle-orm';
