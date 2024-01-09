@@ -1,12 +1,14 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schemaDefs from './schema';
-import { Client } from 'pg';
+import { Client, Pool } from 'pg';
 
-const client = new Client({connectionString: process.env.OZY_POSTGRES_URL});
+const pool = new Pool({
+    connectionString: process.env.OZY_POSTGRES_URL
+})
 
 async function getDB() {
-    await client.connect();
-    return drizzle(client, {schema: schemaDefs});
+    await pool.connect();
+    return drizzle(pool, {schema: schemaDefs});
 }
 
 export const dbPromise = getDB();
