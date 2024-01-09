@@ -102,7 +102,7 @@ export async function createUser(username: string): Promise<string> {
 }
 
 export async function createAuthCookie({username, otp}: LoginRequest): 
-    Promise<{success: true; cookie: string;} | {success: false; error: LoginError;}> {
+    Promise<{success: true; cookie: string; expiry: string;} | {success: false; error: LoginError;}> {
     
     // 1. validate username hash exists in db
     const userEncryptionKey = await getUserKey(username)
@@ -159,7 +159,7 @@ export async function createAuthCookie({username, otp}: LoginRequest):
     // 6. Encrypt then return as cookie
     const cookie = await encrypt(AUTH_KEY, signedJWT);
 
-    return {success: true, cookie};
+    return {success: true, cookie, expiry: expiresAt};
 }
 
 export async function isAuthenticated(authCookie?: string): Promise<AuthStatusResponse> {

@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { LoginResponse, LoginError } from '@/common/universal/api-interfaces';
 import { createAuthCookie } from '@/common/server-side/auth';
-import { AUTH_COOKIE_NAME } from '@ozy/constants';
+import { AUTH_COOKIE_NAME, DOMAIN } from '@ozy/constants';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<LoginResponse>): Promise<void> {
     if (req.method !== 'POST') {
@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         res.status(200).send(result);
         return;
     }
-    res.setHeader('Set-Cookie', `${AUTH_COOKIE_NAME}=${result.cookie}; Path=/`);
+    const {cookie, expiry} = result;
+    res.setHeader('Set-Cookie', `${AUTH_COOKIE_NAME}=${cookie}; Path=/; Domain=${DOMAIN}; HttpOnly; Expires=${expiry}; Secure; SameSite=Strict`);
     res.status(200).json({success: true});
 }

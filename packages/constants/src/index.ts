@@ -4,3 +4,4 @@ export const APP_DISPLAY_NAME = require('../../app/capacitor.config.json').appNa
 export const APP_NAME = 'ozy-app';
 export const APP_VERSION = process.env.APP_VERSION;
 export const DEV_PASSTHROUGH_HOSTNAME = `127.0.0.1:${APP_VERSION === 'prod' ? '4000' : '3000'}`;
+export const DOMAIN = 'beta.ozy.xyz';
