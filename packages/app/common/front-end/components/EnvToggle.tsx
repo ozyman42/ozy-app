@@ -59,17 +59,20 @@ function Expiry({expiry}: {expiry?: string;}) {
             const days = Math.floor(hours / 24);
             hours %= 24;
             let text = '';
-            if (days) text += ` ${days}d`;
-            if (hours || days) text += ` ${hours}h`;
-            if (minutes || hours || days) text += ` ${minutes}m`;
-            text += ` ${seconds}s`;
-            text = text.substring(1);
+            function toText(num: number) {
+                if (text) text += ':';
+                text += num.toString().padStart(2, '0');
+            }
+            if (days) toText(days);
+            if (hours || days) toText(hours);
+            if (minutes || hours || days) toText(minutes);
+            toText(seconds);
             setExpiryText(text);
         }, 500);
         return () => { clearInterval(intervalId); };
     }, [expiry]);
     return <>
-        session expires in {expiryText}
+        {expiryText}
     </>
 }
 
@@ -164,7 +167,7 @@ export function EnvToggle() {
             Reload
         </button>*/}
         {signedIn && <div className='absolute right-0 top-0'>
-            <div className='badge '>
+            <div className='badge font-mono'>
                 <Expiry expiry={sessionExpiry} />
             </div>
             <div className=' btn btn-xs m-1' onClick={() => {signOut()}}>

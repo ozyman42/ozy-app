@@ -1,8 +1,8 @@
 const { execSync } = require('child_process');
 
-function run(cmd) {
+function run(cmd, env) {
     console.log('running', cmd);
-    execSync(cmd, {stdio: 'inherit', env: process.env});
+    execSync(cmd, {stdio: 'inherit', env: Object.assign({}, process.env, env)});
 }
 
 // for full clean run
@@ -16,7 +16,7 @@ execSync(`docker images --filter "dangling=true" -q --no-trunc`)
         execSync(`docker rmi ${sha}`, {stdio: 'inherit'});
     });
 const imageName = 'test';
-run(`docker build . -t ${imageName}`);
+run(`docker build . -t ${imageName}`, {});
 run([
   "docker run -it --rm --entrypoint sh",
   "-p 8080:80 -p 8030:3000",
@@ -24,4 +24,7 @@ run([
   "-e TAIL_SCALE_STATE",
   "-e TAIL_SCALE_MACHINE_NAME",
   imageName
-].join(" "));
+].join(" "), {
+    TAIL_SCALE_MACHINE_NAME: "ozy-app-codespace",
+    TAIL_SCALE_STATE: process.env.TAIL_SCALE_OZY_APP_STATE
+});

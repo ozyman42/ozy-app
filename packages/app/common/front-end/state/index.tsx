@@ -70,7 +70,8 @@ export type NavNode = {
 export type Store = {
   navigation: Navigation;
   curPage: Page;
-  updateNav: (navNodePath: string[], newChild: string) => void
+  updateNav: (navNodePath: string[], newChild: string, skipLocalStorage?: boolean) => void;
+  loadFromLocal: () => void;
 }
 
 function cloneNavigation(navigation: Navigation) {
@@ -101,10 +102,31 @@ function getPage(nav: Navigation) {
   else return getPage(child.navigation);
 }
 
+const LOCAL_STORAGE_KEY = 'local-state';
+
+type LocalStorageState = {
+  curPath: string[];
+}
+
+function baseLocalState(): LocalStorageState {
+  return {
+    curPath: []
+  };
+}
+
+function localGet(): LocalStorageState {
+  const stored = window?.localStorage?.getItem(LOCAL_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : baseLocalState();
+}
+
+function localSet(newLocalState: LocalStorageState) {
+  window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newLocalState));
+}
+
 export const useStore = create<Store>((set, get) => ({
   navigation,
   curPage: getPage(navigation),
-  updateNav: (navNodePath, newChild) => {
+  updateNav: (navNodePath, newChild, skipLocalStorage) => {
     const newNav = cloneNavigation(get().navigation);
     let navNode = newNav;
     for (const pathSegment of navNodePath) {
@@ -112,5 +134,26 @@ export const useStore = create<Store>((set, get) => ({
     }
     navNode.curChild = newChild;
     set({navigation: newNav, curPage: getPage(newNav)});
+    if (skipLocalStorage) return;
+    const fullPath = [...navNodePath];
+    while (true) {
+      fullPath.push(navNode.curChild);
+      const next = navNode.children[navNode.curChild];
+      if (next.isPage) break;
+      navNode = next.navigation;
+    }
+    const curLocalState = localGet();
+    const newLocalState: LocalStorageState = {...curLocalState, curPath: fullPath};
+    localSet(newLocalState);
+  },
+  loadFromLocal() {
+    const localState: LocalStorageState = localGet();
+    if (!localState.curPath.length) return;
+    const navNodePath: string[] = [];
+    const {updateNav} = get();
+    for (const curNode of localState.curPath) {
+      updateNav(navNodePath, curNode, true);
+      navNodePath.push(curNode);
+    }
   }
-}))
+}));

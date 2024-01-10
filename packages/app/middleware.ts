@@ -35,6 +35,8 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       } else {
         return NextResponse.redirect(new URL('/login', req.url), {headers});
       }
+    } else if (url.pathname === '/login') {
+      return NextResponse.redirect(new URL('/', req.url));
     } else {
       req.headers.append('sessionid', authStatus.sessionId);
       return NextResponse.next({request: {headers: req.headers}});
