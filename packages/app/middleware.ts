@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NoAuthRequiredRoutes } from '@/common/universal/auth-paths';
-import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER } from '@ozy/constants';
+import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER, SESSION_ID_MIDDLEWARE_HEADER } from '@ozy/constants';
 import { AuthStatusResponse } from './common/universal/api-interfaces';
-import { SESSION_ID_MIDDLEWARE_HEADER } from './common/server-side/auth';
 
 function requiresAuth(url: URL) {
   return (

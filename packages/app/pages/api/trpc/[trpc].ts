@@ -1,7 +1,7 @@
 import { appRouter } from '@/common/server-side/trpc';
 import * as trpcNext from '@trpc/server/adapters/next';
 import { schema, drizzle, dbPromise } from '@ozy/db-schema';
-import { SESSION_ID_MIDDLEWARE_HEADER } from '@/common/server-side/auth';
+import { SESSION_ID_MIDDLEWARE_HEADER } from '@ozy/constants';
 
 export default trpcNext.createNextApiHandler({
     router: appRouter,

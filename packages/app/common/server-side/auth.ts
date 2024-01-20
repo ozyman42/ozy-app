@@ -6,8 +6,6 @@ import * as argon2 from 'argon2';
 import { v4 as uuid } from 'uuid';
 import * as jsonwebtoken from 'jsonwebtoken';
 
-export const SESSION_ID_MIDDLEWARE_HEADER = 'sessionid';
-
 const ENCRYPTION_ALGO = 'aes-256-cbc';
 const EXPIRATION_DURATION_DAYS = 15;
 const AUTH_KEY = process.env.OZY_AUTH_KEY!;
