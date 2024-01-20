@@ -177,3 +177,6 @@ export function EnvToggle() {
         </div>}
     </div>
 }
+
+alert('hello! location is ' + window.location.toString());
+
