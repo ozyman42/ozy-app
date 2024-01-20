@@ -122,7 +122,7 @@ export function EnvToggle() {
             setSignedIn(response.isAuthed);
             const curPathRequiresAuth = !NoAuthRequiredRoutes.has(window.location.pathname);
             if (!response.isAuthed && curPathRequiresAuth) {
-                reload('not authed, cur path requires auth. reloading');
+                reload(`not authed, cur path is ${window.location.pathname} and it requires auth. reloading`);
             }
             if (response.isAuthed) {
                 setSessionExpiry(response.expiresAt);

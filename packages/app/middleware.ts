@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { NoAuthRequiredRoutes } from '@/common/universal/auth-paths';
 import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER } from '@ozy/constants';
 import { AuthStatusResponse } from './common/universal/api-interfaces';
+import { SESSION_ID_MIDDLEWARE_HEADER } from './common/server-side/auth';
 
 function requiresAuth(url: URL) {
   return (
@@ -38,7 +39,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     } else if (url.pathname === '/login') {
       return NextResponse.redirect(new URL('/', req.url));
     } else {
-      req.headers.append('sessionId', authStatus.sessionId);
+      req.headers.append(SESSION_ID_MIDDLEWARE_HEADER, authStatus.sessionId);
       return NextResponse.next({request: {headers: req.headers}});
     }
   }
