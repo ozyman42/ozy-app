@@ -37,8 +37,9 @@ function oppositeEnv(env: Env) {
     return envs[(idx + 1) % envs.length];
 }
 
-function reload() {
-    window.location.reload();
+function reload(reason: string) {
+    alert(reason);
+    //window.location.reload();
 }
 
 function Expiry({expiry}: {expiry?: string;}) {
@@ -94,7 +95,7 @@ export function EnvToggle() {
                 }
                 if (curEnv !== undefined && curEnv !== version) {
                     setSwitching(false);
-                    reload();   
+                    reload(`curEnv ${curEnv} version ${version}. reloading`);   
                 }
                 setCurEnv(version);
                 setEnvError(undefined);
@@ -121,7 +122,7 @@ export function EnvToggle() {
             setSignedIn(response.isAuthed);
             const curPathRequiresAuth = !NoAuthRequiredRoutes.has(window.location.pathname);
             if (!response.isAuthed && curPathRequiresAuth) {
-                window.location.reload();
+                reload('not authed, cur path requires auth. reloading');
             }
             if (response.isAuthed) {
                 setSessionExpiry(response.expiresAt);
@@ -148,9 +149,9 @@ export function EnvToggle() {
     }
     async function signOut() {
         await fetch('/api/auth/sign-out');
-        window.location.reload();
+        reload('signed out. reloading');
     }
-    return <div className='relative'>
+    return <div className='relative h-8'>
         <Status name='dev' status={curDevStatus} badStatus='offline'/>
         {/*devStatusError && <Error error={devStatusError} />*/}
         <Status name='env' status={curEnv} />
@@ -163,7 +164,7 @@ export function EnvToggle() {
                 {!curEnv && <Loading />}
             </button>
         }
-        {/*<button className="btn btn-xs m-1 btn-outline" onClick={() => {reload();}}>
+        {/*<button className="btn btn-xs m-1 btn-outline" onClick={() => {reload('reload clicked');}}>
             Reload
         </button>*/}
         {signedIn && <div className='absolute right-0 top-0'>

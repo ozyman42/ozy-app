@@ -1,16 +1,14 @@
 {
-	"name": "root",
+  "name": "root",
   "scripts": {
-    "app:deploy:dev": "pnpm --filter @ozy/app app:deploy:dev",
-    "app:dev": "pnpm --filter @ozy/app dev",
-    "app:docker:dev": "docker built -t ozy_app -f packages/app/Dockerfile . && docker run -t",
-    "app:regen:dev": "pnpm --filter @ozy/app app:regen:dev",
-    "app:regen:prod": "pnpm --filter @ozy/app app:regen:prod",
-    "infra:plan": "pnpm --filter @ozy/infra exec cdktf plan",
-    "infra:apply": "pnpm --filter @ozy/infra exec cdktf deploy --auto-approve"
+    "app:deploy:dev": "cd packages/app && npx cap run android --verbose",
+    "app:regen:dev": "node ./scripts/regen-app.js dev",
+    "app:regen:prod": "node ./scripts/regen-app.js prod"
   },
   "dependencies": {
-    "socks-proxy-agent": "8.0.2",
-    "http-proxy": "1.18.1"
+    "fast-xml-parser": "^4.3.3",
+    "http-proxy": "1.18.1",
+    "png-to-ico": "^2.1.8",
+    "socks-proxy-agent": "8.0.2"
   }
 }

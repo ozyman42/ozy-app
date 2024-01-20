@@ -2,8 +2,8 @@ import { pgTable, integer, serial, text, timestamp, varchar } from 'drizzle-orm/
 
 export const users = pgTable('users', {
     id: serial('id').primaryKey(),
-    username: text('username').unique(),
-    totp: text('totp')
+    username: text('username').unique().notNull(),
+    totp: text('totp').notNull()
 });
 
 export const tradingExchanges = pgTable('trading_exchanges', {
@@ -13,6 +13,14 @@ export const tradingExchanges = pgTable('trading_exchanges', {
 
 export const sessions = pgTable('sessions', {
     id: text('id').primaryKey(),
-    userId: integer('user_id').references(() => users.id),
-    expiresAt: text('expires_at')
+    userId: integer('user_id').references(() => users.id).notNull(),
+    expiresAt: text('expires_at').notNull()
+});
+
+export const steps = pgTable('steps', {
+    id: text('id').primaryKey(),
+    userId:  integer('user_id').references(() => users.id).notNull(),
+    startTime: text('start_time').notNull(),
+    endTime: text('end_time').notNull(),
+    steps: integer('steps').notNull()
 });

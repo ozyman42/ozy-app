@@ -15,6 +15,20 @@
       "when": 1704508386469,
       "tag": "0001_tiresome_skrulls",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705296460760,
+      "tag": "0002_true_gorgon",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1705733445305,
+      "tag": "0003_melted_sandman",
+      "breakpoints": true
     }
   ]
 }
