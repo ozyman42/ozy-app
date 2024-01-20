@@ -16,6 +16,9 @@ function isAPI(url: URL) {
 
 export async function middleware(req: NextRequest, res: NextResponse) {
   const url = new URL(req.url);
+  if (req.method === 'GET') {
+    console.log(`GET on ${url.pathname} from ${req.ip}`);
+  }
   if (requiresAuth(url)) {
     const authCookie = req.cookies.get(AUTH_COOKIE_NAME)?.value;
     const authStatus: AuthStatusResponse = 
@@ -33,6 +36,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       if (isAPI(url)) {
         return NextResponse.json({error: 'unauthorized'}, {status: 401, headers});
       } else {
+        console.log('redirecting to login');
         return NextResponse.redirect(new URL('/login', req.url), {headers});
       }
     } else if (url.pathname === '/login') {
