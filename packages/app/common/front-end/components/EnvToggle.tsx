@@ -39,7 +39,7 @@ function oppositeEnv(env: Env) {
 
 function reload(reason: string) {
     alert(reason);
-    //window.location.reload();
+    window.location.reload();
 }
 
 function Expiry({expiry}: {expiry?: string;}) {
@@ -178,5 +178,6 @@ export function EnvToggle() {
     </div>
 }
 
-alert('hello! location is ' + window.location.toString());
-
+if (typeof window !== 'undefined') {
+    window.alert('hello! location is ' + window.location.toString());
+}
