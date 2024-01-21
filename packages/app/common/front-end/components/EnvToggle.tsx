@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Loading } from './Loading';
 import { AuthStatusResponse } from '@/common/universal/api-interfaces';
 import { NoAuthRequiredRoutes } from '@/common/universal/auth-paths';
+import { LOGIN_PAGE_PATH } from '@ozy/constants';
 
 type StatusProps = {
     status: string | undefined;
@@ -122,7 +123,9 @@ export function EnvToggle() {
             setSignedIn(response.isAuthed);
             const curPathRequiresAuth = !NoAuthRequiredRoutes.has(window.location.pathname);
             if (!response.isAuthed && curPathRequiresAuth) {
-                reload(`not authed, cur path is ${window.location.pathname} and it requires auth. reloading`);
+                alert(`not authed, cur path is ${window.location.pathname} and it requires auth. sending to ${LOGIN_PAGE_PATH}`);
+                window.location.href = LOGIN_PAGE_PATH;
+                return;
             }
             if (response.isAuthed) {
                 setSessionExpiry(response.expiresAt);

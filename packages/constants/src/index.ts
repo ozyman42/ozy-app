@@ -6,3 +6,5 @@ export const APP_VERSION = process.env.APP_VERSION;
 export const DEV_PASSTHROUGH_HOSTNAME = `127.0.0.1:${APP_VERSION === 'prod' ? '4000' : '3000'}`;
 export const DOMAIN = 'beta.ozy.xyz';
 export const SESSION_ID_MIDDLEWARE_HEADER = 'sessionid';
+export const LOGIN_PAGE_PATH = '/login';
+export const MAIN_APP_PAGE_PATH = '/';

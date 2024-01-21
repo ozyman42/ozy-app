@@ -6,6 +6,7 @@ import { TextInput } from '@/common/front-end/components/TextInput';
 import { LoginError, LoginRequest, LoginResponse, SIGN_UP_RECAPTCHA_ACTION, SignUpError, SignUpRequest, SignUpResponse } from '@/common/universal/api-interfaces';
 import * as React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { MAIN_APP_PAGE_PATH } from '@ozy/constants';
 
 type LoginProps = {
     recaptchaSiteKey: string
@@ -58,7 +59,7 @@ export default function Login({recaptchaSiteKey}: LoginProps) {
             }
             return;
         }
-        window.location.href = '/';
+        window.location.href = MAIN_APP_PAGE_PATH;
     }
     const isSignupActive = !!(signUpUsername && recaptchaResponse);
     async function signup() {

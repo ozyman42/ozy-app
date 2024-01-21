@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NoAuthRequiredRoutes } from '@/common/universal/auth-paths';
-import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER, SESSION_ID_MIDDLEWARE_HEADER } from '@ozy/constants';
+import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER, LOGIN_PAGE_PATH, MAIN_APP_PAGE_PATH, SESSION_ID_MIDDLEWARE_HEADER } from '@ozy/constants';
 import { AuthStatusResponse } from './common/universal/api-interfaces';
 
 function requiresAuth(url: URL) {
@@ -36,11 +36,12 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       if (isAPI(url)) {
         return NextResponse.json({error: 'unauthorized'}, {status: 401, headers});
       } else {
-        console.log('redirecting to login');
-        return NextResponse.redirect(new URL('/login', req.url), {headers});
+        console.log(`redirecting to ${LOGIN_PAGE_PATH}`);
+        return NextResponse.redirect(new URL(LOGIN_PAGE_PATH, req.url), {headers});
       }
-    } else if (url.pathname === '/login') {
-      return NextResponse.redirect(new URL('/', req.url));
+    } else if (url.pathname === LOGIN_PAGE_PATH) {
+      console.log(`redirecting to ${MAIN_APP_PAGE_PATH}`)
+      return NextResponse.redirect(new URL(MAIN_APP_PAGE_PATH, req.url));
     } else {
       req.headers.append(SESSION_ID_MIDDLEWARE_HEADER, authStatus.sessionId);
       return NextResponse.next({request: {headers: req.headers}});

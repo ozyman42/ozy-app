@@ -1,5 +1,7 @@
+import { LOGIN_PAGE_PATH } from "@ozy/constants";
+
 export const NoAuthRequiredRoutes = new Set([
-    '/login',
+    LOGIN_PAGE_PATH,
     '/api/auth/login',
     '/api/auth/sign-up',
     '/api/auth/status',
