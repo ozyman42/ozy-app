@@ -43,6 +43,10 @@ function reload(reason: string) {
     window.location.reload();
 }
 
+function goToLogin() {
+    window.location.href = LOGIN_PAGE_PATH;
+}
+
 function Expiry({expiry}: {expiry?: string;}) {
     const [expiryText, setExpiryText] = React.useState("");
     React.useEffect(() => {
@@ -123,8 +127,8 @@ export function EnvToggle() {
             setSignedIn(response.isAuthed);
             const curPathRequiresAuth = !NoAuthRequiredRoutes.has(window.location.pathname);
             if (!response.isAuthed && curPathRequiresAuth) {
-                alert(`not authed, cur path is ${window.location.pathname} and it requires auth. sending to ${LOGIN_PAGE_PATH}`);
-                window.location.href = LOGIN_PAGE_PATH;
+                // alert(`not authed, cur path is ${window.location.pathname} and it requires auth. sending to ${LOGIN_PAGE_PATH}`);
+                goToLogin();
                 return;
             }
             if (response.isAuthed) {
@@ -152,7 +156,7 @@ export function EnvToggle() {
     }
     async function signOut() {
         await fetch('/api/auth/sign-out');
-        reload('signed out. reloading');
+        goToLogin();
     }
     return <div className='relative h-8'>
         <Status name='dev' status={curDevStatus} badStatus='offline'/>
@@ -179,8 +183,4 @@ export function EnvToggle() {
             </div>
         </div>}
     </div>
-}
-
-if (typeof window !== 'undefined') {
-    window.alert('hello! location is ' + window.location.toString());
 }
