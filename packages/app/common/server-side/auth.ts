@@ -1,4 +1,4 @@
-import { AuthStatusResponse, LoginError, LoginRequest } from '../universal/api-interfaces';
+import { AuthStatusFailureReason, AuthStatusResponse, LoginError, LoginRequest } from '../universal/api-interfaces';
 import { authenticator } from 'otplib';
 import { dbPromise, schema, drizzle } from '@ozy/db-schema';
 import * as crypto from 'crypto';
@@ -163,7 +163,9 @@ export async function createAuthCookie({username, otp}: LoginRequest):
 }
 
 export async function isAuthenticated(authCookie?: string): Promise<AuthStatusResponse> {
-    if (!authCookie) return {isAuthed: false, authCookie};
+    if (!authCookie) {
+        return {isAuthed: false, reason: AuthStatusFailureReason.MissingCookie};
+    }
     
     // 1. decrypt cookie
     let signedJWT
@@ -172,7 +174,7 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
     } catch (e) {
         const error = e as Error;
         console.log('failed to decrypt auth cookie', e);
-        return {isAuthed: false, authCookie};
+        return {isAuthed: false, reason: AuthStatusFailureReason.InvalidCookie};
     }
     
     // 2. validate JWT is signed
@@ -182,7 +184,7 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
     } catch(e) {
         const error = e as Error;
         console.log('failed to verify signed jwt', e);
-        return {isAuthed: false, authCookie};
+        return {isAuthed: false, reason: AuthStatusFailureReason.InvalidToken};
     }
     
     // 3. validate JWT is not expired
@@ -192,7 +194,7 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
     const nowPretty = (new Date(now)).toUTCString();
     if (now > jwtExpiry.getTime()) {
         console.log(`jwt expired at ${expiresAt} now is ${nowPretty}`);
-        return {isAuthed: false, authCookie};
+        return {isAuthed: false, reason: AuthStatusFailureReason.ExpiredToken};
     }
 
     // 4. validate session is not expired
@@ -203,22 +205,17 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
         .execute();
     if (sessions.length !== 1) {
         console.log(`no session with id ${sessionId}. auth check failed`);
-        return {isAuthed: false, authCookie};
+        return {isAuthed: false, reason: AuthStatusFailureReason.NoSuchSession};
     }
     const session = sessions[0];
-    if (!session.expiresAt) {
-        console.log(`blank session expiry`);
-        return {isAuthed: false, authCookie};
-    }
     const sessionExpiry = new Date(session.expiresAt);
     if (now > sessionExpiry.getTime()) {
         console.log(`session expired at ${session.expiresAt} now is ${nowPretty}`);
-        return {isAuthed: false, authCookie};
+        return {isAuthed: false, reason: AuthStatusFailureReason.ExpiredSession};
     }
     
     return {
         isAuthed: true,
-        authCookie,
         expiresAt: session.expiresAt,
         sessionId
     };

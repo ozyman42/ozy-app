@@ -5,6 +5,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<AuthStatusResponse>): Promise<void> {
+    const { reqid } = req.headers;
     const authCookie = req.cookies[AUTH_COOKIE_NAME];
-    res.status(200).json(await isAuthenticated(authCookie));
+    const authStatusResult = await isAuthenticated(authCookie);
+    res.status(200).json(authStatusResult);
 }

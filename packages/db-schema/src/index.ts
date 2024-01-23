@@ -11,6 +11,8 @@ async function getDB() {
     return drizzle(pool, {schema: schemaDefs});
 }
 
+// TODO: maybe use Kysley instead
+// https://github.com/kysely-org/kysely
 export const dbPromise = getDB();
 export const schema = schemaDefs;
 export * as drizzle from 'drizzle-orm';

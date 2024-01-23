@@ -144,7 +144,7 @@ export function EnvToggle() {
         }
         const intervalId = setInterval(() => {
             getAll();
-        }, 5000);
+        }, 15000);
         getAll();
         return () => { clearInterval(intervalId); }
     }, [curEnv]);

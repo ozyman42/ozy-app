@@ -8,7 +8,7 @@ export type DevServerStatus = {
 
 export async function getDevServerStatus(): Promise<DevServerStatus> {
     try {
-        const versionResponse = await nodeFetch(`http://${DEV_PASSTHROUGH_HOSTNAME}/api/version`, {signal: AbortSignal.timeout(2000)});
+        const versionResponse = await nodeFetch(`http://${DEV_PASSTHROUGH_HOSTNAME}/api/version`, {signal: AbortSignal.timeout(5000)});
         const text = await versionResponse.text();
         const code = versionResponse.status;
         return {text, code};

@@ -32,7 +32,15 @@ export type SignUpResponse =
     { success: true; otpKey: string; } |
     { success: false; error: SignUpError; }
 
-export type AuthStatusResponse = 
-    { isAuthed: false; authCookie?: string} |
-    { isAuthed: true; authCookie: string; sessionId: string; expiresAt: string };
+export enum AuthStatusFailureReason {
+    MissingCookie = 'MissingCookie',
+    InvalidCookie = 'InvalidCookie',
+    InvalidToken  = 'InvalidToken',
+    ExpiredToken  = 'ExpiredToken',
+    NoSuchSession = 'NoSuchSession',
+    ExpiredSession = 'ExpiredSession'
+}
 
+export type AuthStatusResponse = 
+    { isAuthed: false; reason: AuthStatusFailureReason; } |
+    { isAuthed: true; sessionId: string; expiresAt: string };

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { NoAuthRequiredRoutes } from '@/common/universal/auth-paths';
 import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER, LOGIN_PAGE_PATH, MAIN_APP_PAGE_PATH, SESSION_ID_MIDDLEWARE_HEADER } from '@ozy/constants';
 import { AuthStatusResponse } from './common/universal/api-interfaces';
+import { v4 as uuid } from 'uuid';
 
 function requiresAuth(url: URL) {
   return (
@@ -16,15 +17,29 @@ function isAPI(url: URL) {
 
 export async function middleware(req: NextRequest, res: NextResponse) {
   const url = new URL(req.url);
+  const reqid = uuid();
+  req.headers.append('reqid', reqid);
   if (requiresAuth(url)) {
     const authCookie = req.cookies.get(AUTH_COOKIE_NAME)?.value;
-    const authStatus: AuthStatusResponse = 
-      await (
+    let authStatus: AuthStatusResponse;
+    try {
+      authStatus = await (
         await fetch(
           'http://localhost:3000/api/auth/status', 
-          {headers: req.headers}
+          {
+            headers: {
+              cookie: req.headers.get('cookie')!,
+              reqid
+            }
+          }
         )
       ).json();
+    } catch (e) {
+      const error = e as Error;
+      console.log(reqid, 'failed to get auth status in middleware');
+      console.log(error);
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
     if (!authStatus.isAuthed) {
       const headers: any = {};
       if (authCookie) {
