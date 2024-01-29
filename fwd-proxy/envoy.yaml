@@ -117,7 +117,7 @@ static_resources:
                 address:
                   socket_address:
                     address: hasura.railway.internal
-                    port_value: 80
+                    port_value: 8080
 
 admin:
   access_log_path: "/tmp/admin_access.log"
