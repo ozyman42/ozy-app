@@ -1,0 +1,7 @@
+# https://hasura.io/blog/hasura-metadata-sdk/
+# https://hasura.io/docs/latest/hasura-cli/config-reference/
+# hasura metadata export
+version: 3
+endpoint: https://hasura.ozy.xyz
+insecure_skip_tls_verify: false
+metadata_directory: metadata

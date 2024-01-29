@@ -1,0 +1,12 @@
+table:
+  name: steps
+  schema: public
+select_permissions:
+  - role: readonly
+    permission:
+      columns:
+        - user_id
+        - id
+        - steps
+      filter: {}
+    comment: ""

@@ -39,6 +39,10 @@ static_resources:
                                 key: "Set-Cookie"
                                 value: "env=prod; HttpOnly"
                         - match:
+                            prefix: "/v1/graphql"
+                          route:
+                            cluster: hasura
+                        - match:
                             prefix: "/api/health/dev"
                           route:
                             cluster: prod_cluster
@@ -101,6 +105,18 @@ static_resources:
                     socket_address:
                       address: 0.0.0.0
                       port_value: 3000
+    - name: hasura
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: hasura
+            - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: hasura.railway.internal
+                      port_value: 80
 
 admin:
   access_log_path: "/tmp/admin_access.log"

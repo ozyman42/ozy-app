@@ -1,0 +1,18 @@
+table:
+  name: trading_exchanges
+  schema: public
+computed_fields:
+  - name: has_bybit_key
+    definition:
+      function:
+        name: has_bybit_key
+        schema: public
+select_permissions:
+  - role: readonly
+    permission:
+      columns:
+        - user_id
+      computed_fields:
+        - has_bybit_key
+      filter: {}
+    comment: ""
