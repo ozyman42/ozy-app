@@ -41,7 +41,7 @@ static_resources:
                         - match:
                             prefix: "/v1/graphql"
                           route:
-                            cluster: hasura
+                            cluster: hasura_2
                         - match:
                             prefix: "/api/health/dev"
                           route:
@@ -118,6 +118,23 @@ static_resources:
                   socket_address:
                     address: hasura.railway.internal
                     port_value: 8080
+    - name: hasura_2
+      connect_timeout: 0.25s
+      type: STRICT_DNS
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: hasura_2
+        endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: hasura.ozy.xyz
+                    port_value: 443
+      transport_socket:
+        name: envoy.transport_sockets.tls
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
 
 admin:
   access_log_path: "/tmp/admin_access.log"

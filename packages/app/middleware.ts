@@ -40,6 +40,11 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       console.log(error);
       return NextResponse.json({error: error.message}, {status: 500});
     }
+    if (url.pathname.startsWith('/console') || url.pathname.startsWith('/v1')) {
+      const hasuraURL = new URL(`https://hasura.ozy.xyz`);
+      hasuraURL.pathname = url.pathname;
+      return NextResponse.rewrite(hasuraURL);
+    }
     if (!authStatus.isAuthed) {
       const headers: any = {};
       if (authCookie) {
