@@ -74,18 +74,18 @@ static_resources:
 #                      filename: "[CERT_PATH]"
 #                    private_key:
 #                      filename: "[KEY_PATH]"
-      - name: ipv4_listener
-        address:
-          socket_address:
-            address: 0.0.0.0
-            port_value: 80
-        <<: *common_filter_chain 
-      - name: ipv6_listener
-        address:
-          socket_address:
-            address: "::"
-            port_value: 80
-        <<: *common_filter_chain 
+    - name: ipv4_listener
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 80
+      <<: *common_filter_chain 
+    - name: ipv6_listener
+      address:
+        socket_address:
+          address: "::"
+          port_value: 80
+      <<: *common_filter_chain 
   clusters:
     - name: dev_cluster
       connect_timeout: 0.25s
