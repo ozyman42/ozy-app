@@ -1,8 +1,12 @@
 static_resources:
   listeners:
-    - &common_filter_chain
+    - name: ipv4_listener
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 80
       filter_chains:
-        - filters:
+        - filters: &common_filters
             - name: envoy.http_connection_manager
               typed_config:
                 "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
@@ -74,18 +78,13 @@ static_resources:
 #                      filename: "[CERT_PATH]"
 #                    private_key:
 #                      filename: "[KEY_PATH]"
-    - name: ipv4_listener
-      address:
-        socket_address:
-          address: 0.0.0.0
-          port_value: 80
-      <<: *common_filter_chain 
     - name: ipv6_listener
       address:
         socket_address:
           address: "::"
           port_value: 80
-      <<: *common_filter_chain 
+      filter_chains:
+        - filters: *common_filters
   clusters:
     - name: dev_cluster
       connect_timeout: 0.25s
