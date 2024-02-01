@@ -40,11 +40,6 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       console.log(error);
       return NextResponse.json({error: error.message}, {status: 500});
     }
-    if (url.pathname.startsWith('/console') || url.pathname.startsWith('/v1')) {
-      const hasuraURL = new URL(`http://hasura:8080`);
-      hasuraURL.pathname = url.pathname;
-      return NextResponse.rewrite(hasuraURL);
-    }
     if (!authStatus.isAuthed) {
       const headers: any = {};
       if (authCookie) {
@@ -59,6 +54,11 @@ export async function middleware(req: NextRequest, res: NextResponse) {
     } else if (url.pathname === LOGIN_PAGE_PATH) {
       console.log(`redirecting from ${url.pathname} to ${MAIN_APP_PAGE_PATH}`)
       return NextResponse.redirect(new URL(MAIN_APP_PAGE_PATH, req.url));
+    } else if (url.pathname.startsWith('/console') || url.pathname.startsWith('/v1')) {
+      // TODO: perhaps only enable for my user
+      const hasuraURL = new URL(`http://hasura:8080`);
+      hasuraURL.pathname = url.pathname;
+      return NextResponse.rewrite(hasuraURL);
     } else {
       req.headers.append(SESSION_ID_MIDDLEWARE_HEADER, authStatus.sessionId);
       return NextResponse.next({request: {headers: req.headers}});
