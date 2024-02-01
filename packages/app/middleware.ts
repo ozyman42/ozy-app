@@ -41,7 +41,7 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       return NextResponse.json({error: error.message}, {status: 500});
     }
     if (url.pathname.startsWith('/console') || url.pathname.startsWith('/v1')) {
-      const hasuraURL = new URL(`https://hasura.ozy.xyz`);
+      const hasuraURL = new URL(`http://hasura:8080`);
       hasuraURL.pathname = url.pathname;
       return NextResponse.rewrite(hasuraURL);
     }
