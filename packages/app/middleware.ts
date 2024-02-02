@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { NoAuthRequiredRoutes } from '@/common/universal/auth-paths';
-import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER, LOGIN_PAGE_PATH, MAIN_APP_PAGE_PATH, SESSION_ID_MIDDLEWARE_HEADER } from '@ozy/constants';
+import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER, LOGIN_PAGE_PATH, MAIN_APP_PAGE_PATH, SESSION_ID_MIDDLEWARE_HEADER, USER_ID_MIDDLEWARE_HEADER } from '@ozy/constants';
 import { AuthStatusResponse } from './common/universal/api-interfaces';
 import { v4 as uuid } from 'uuid';
 
@@ -55,12 +55,17 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       console.log(`redirecting from ${url.pathname} to ${MAIN_APP_PAGE_PATH}`)
       return NextResponse.redirect(new URL(MAIN_APP_PAGE_PATH, req.url));
     } else if (url.pathname.startsWith('/console') || url.pathname.startsWith('/v1')) {
-      // TODO: perhaps only enable for my user
-      const hasuraURL = new URL(`http://hasura:8080`);
-      hasuraURL.pathname = url.pathname;
-      return NextResponse.rewrite(hasuraURL);
+      if (authStatus.userId === 12) { // 12 is me
+        const hasuraURL = new URL(`http://hasura:8080`);
+        hasuraURL.pathname = url.pathname;
+        return NextResponse.rewrite(hasuraURL);
+      } else {
+        console.log(`redirecting from ${url.pathname} to ${MAIN_APP_PAGE_PATH} because user id is ${authStatus.userId}`);
+        return NextResponse.redirect(new URL(MAIN_APP_PAGE_PATH, req.url));
+      }
     } else {
       req.headers.append(SESSION_ID_MIDDLEWARE_HEADER, authStatus.sessionId);
+      req.headers.append(USER_ID_MIDDLEWARE_HEADER, authStatus.userId.toString());
       return NextResponse.next({request: {headers: req.headers}});
     }
   }

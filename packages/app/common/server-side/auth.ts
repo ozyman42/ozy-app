@@ -217,6 +217,7 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
     return {
         isAuthed: true,
         expiresAt: session.expiresAt,
+        userId: session.userId,
         sessionId
     };
 }

@@ -43,4 +43,4 @@ export enum AuthStatusFailureReason {
 
 export type AuthStatusResponse = 
     { isAuthed: false; reason: AuthStatusFailureReason; } |
-    { isAuthed: true; sessionId: string; expiresAt: string };
+    { isAuthed: true; sessionId: string; userId: number; expiresAt: string };
