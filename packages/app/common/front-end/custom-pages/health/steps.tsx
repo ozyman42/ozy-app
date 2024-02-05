@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { trpc } from '@/common/front-end/clients/trpc';
+import { gql } from '@/common/front-end/clients/graphql';
 
 type Item = {
     steps: number;
@@ -14,6 +15,12 @@ export function Steps() {
     const [startDate, setStartDate] = React.useState<Date | undefined>(undefined);
     const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
     const [error, setError] = React.useState<string | undefined>(undefined);
+    const [result, setResult] = React.useState<string>("");
+    const test = gql.subscribe({
+        steps: {
+            user_id: true
+        }
+    });
     const modSteps = trpc.modSteps.useMutation();
     const modActive = 
         steps !== undefined &&
@@ -83,6 +90,34 @@ export function Steps() {
         const result = `${dayHour}:${minute}`;
         return result;
     }
+    async function getGQLQuery() {
+        setResult('loading...');
+        try {
+            /*
+            const hello = await fetch('/v1/graphql', {
+                method: 'POST',
+
+                body: JSON.stringify({
+                    query: `query AnotherOne { steps { id\nuser_id\nstart_time } }`
+                })
+            });
+            setResult(JSON.stringify(await hello.json(), null, 2));
+            */
+           /*
+            const res = await gql.query({
+                steps: {
+                    id: true,
+                    user_id: true
+                }
+            });
+            
+            setResult(JSON.stringify(res, null, 2));
+            */
+        } catch(e) {
+            const error = e as Error;
+            setResult(`Error: ${error.message}`);
+        }
+    }
     return <div>
         Averages display
         <div className='divider my-1'></div>
@@ -135,6 +170,16 @@ export function Steps() {
             </div>
         </div>}
         <div className='divider'></div>
-        Then display form to add steps
+        <pre className={result.startsWith('Error: ') || result.includes("errors") ? 'bg-red-400' : ''}>
+            {result}
+        </pre>
+        <div className='btn btn-primary mx-auto mt-2' onClick={() => { getGQLQuery(); }}>
+            Click me
+        </div>
+        <pre>
+            {test === undefined && 'loading...'}
+            {test !== undefined && JSON.stringify(test, null, 2)}
+        </pre>
     </div>
 }
+ 

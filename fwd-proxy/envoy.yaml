@@ -42,6 +42,12 @@ static_resources:
                             prefix: "/v1"
                           route:
                             cluster: hasura
+                            upgrade_configs:
+                              - upgrade_type: websocket
+                        - match:
+                            prefix: "/v2"
+                          route:
+                            cluster: hasura
                         - match:
                             prefix: "/console"
                           route:
