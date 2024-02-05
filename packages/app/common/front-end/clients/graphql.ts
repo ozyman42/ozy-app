@@ -3,7 +3,7 @@ import { createClient as createWsClient } from 'graphql-ws';
 import { useState, useEffect } from 'react';
 
 const wsClient = createWsClient({
-    url: "/v1/graphql",
+    url: "wss://beta.ozy.xyz/v1/graphql",
 });
 
 const genQL = createClient({
@@ -21,7 +21,7 @@ export const gql = {
             wsClient.subscribe(
                 { query, variables },
                 {
-                    next: (data) => {
+                    next: ({data}) => {
                         console.log('subscription', data);
                         setResult(data as any);
                     },

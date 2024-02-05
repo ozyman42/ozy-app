@@ -18,7 +18,10 @@ export function Steps() {
     const [result, setResult] = React.useState<string>("");
     const test = gql.subscribe({
         steps: {
-            user_id: true
+            user_id: true,
+            start_time: true,
+            end_time: true,
+            steps: true
         }
     });
     const modSteps = trpc.modSteps.useMutation();
@@ -178,7 +181,7 @@ export function Steps() {
         </div>
         <pre>
             {test === undefined && 'loading...'}
-            {test !== undefined && JSON.stringify(test, null, 2)}
+            {test !== undefined && JSON.stringify(test.steps, null, 2)}
         </pre>
     </div>
 }

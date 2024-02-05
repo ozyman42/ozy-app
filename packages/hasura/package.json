@@ -8,6 +8,8 @@
         "@hasura/metadata": "^1.0.2"
     },
     "scripts": {
-        "start": "ts-node ./src/index.ts"
+        "start": "ts-node ./src/index.ts",
+        "set-metadata": "",
+        "get-metadata": "hasura metadata export"
     }
 }

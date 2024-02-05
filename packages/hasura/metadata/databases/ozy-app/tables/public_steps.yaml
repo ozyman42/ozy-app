@@ -1,0 +1,16 @@
+table:
+  name: steps
+  schema: public
+select_permissions:
+  - role: readonly
+    permission:
+      columns:
+        - end_time
+        - id
+        - start_time
+        - steps
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""
