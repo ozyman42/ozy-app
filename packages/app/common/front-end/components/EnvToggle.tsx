@@ -93,17 +93,18 @@ export function EnvToggle() {
     React.useEffect(() => {
         async function getEnv() {
             try {
-                const response = await (await fetch('/api/version')).json();
-                const {version} = response;
-                if (!Object.values(Env).includes(version)) {
-                    throw new Error(JSON.stringify(response));
-                }
-                if (curEnv !== undefined && curEnv !== version) {
-                    setSwitching(false);
-                    reload(`curEnv ${curEnv} version ${version}. reloading`);   
-                }
-                setCurEnv(version);
-                setEnvError(undefined);
+              const response = await (await fetch('/api/version')).json();
+              const {version} = response;
+              if (!Object.values(Env).includes(version)) {
+                  throw new Error(JSON.stringify(response));
+              }
+              if (curEnv !== undefined && curEnv !== version) {
+                  setSwitching(false);
+                  reload(`curEnv ${curEnv} version ${version}. reloading`);   
+              }
+              setCurEnv(version);
+              setEnvError(undefined);
+              console.log('done');
             } catch(e) {
                 setEnvError((e as Error).message);
             }
@@ -159,14 +160,14 @@ export function EnvToggle() {
         goToLogin();
     }
     return <div className='relative h-8'>
-        <Status name='dev' status={curDevStatus} badStatus='offline'/>
+        <Status name='dev' status={curDevStatus === DevServerStatus.online ? 'on' : 'off'} badStatus='off'/>
         {/*devStatusError && <Error error={devStatusError} />*/}
         <Status name='env' status={curEnv} />
         {/*envError && <Error error={envError} />*/}
         {(curEnv === Env.dev || curDevStatus === DevServerStatus.online) &&
             <button className="btn btn-xs m-1 btn-outline gap-1" onClick={() => {toggleEnv();}}>
                 {curEnv && <>
-                    Switch{switching ? 'ing' : ''} to <b>{oppositeEnv(curEnv)}</b>{switching && <Loading />}
+                    go{switching ? 'ing' : ''} to <b>{oppositeEnv(curEnv)}</b>{switching && <Loading />}
                 </>}
                 {!curEnv && <Loading />}
             </button>

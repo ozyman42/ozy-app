@@ -1,3 +1,12 @@
+const withTM = require('next-transpile-modules');
+const packageJSON = require('./package.json');
+
+const libs = new Set(['devDependencies', 'dependencies']
+  .map(k => Object.entries(packageJSON[k]))
+  .flat()
+  .filter(([k, v]) => v === 'workspace:*')
+  .map(([k]) => k));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -13,4 +22,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig
+module.exports = withTM(Array.from(libs))(nextConfig);

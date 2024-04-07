@@ -1,6 +1,6 @@
 import { AuthStatusFailureReason, AuthStatusResponse, LoginError, LoginRequest } from '../universal/api-interfaces';
 import { authenticator } from 'otplib';
-import { dbPromise, schema, drizzle } from '@ozy/db-schema';
+import { usingDb, schema, drizzle } from '@ozy/db-schema';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2';
 import { v4 as uuid } from 'uuid';
@@ -70,11 +70,13 @@ export function getUserKey(username: string) {
 export async function usernameExists(username: string): Promise<boolean> {
     const userEncryptionKey = await getUserKey(username);
     const hashedUsername = await argon2It(userEncryptionKey);
-    const db = await dbPromise;
-    const results = await db.select()
+    const results = await usingDb(async db => {
+      const results = await db.select()
         .from(schema.users)
         .where(drizzle.eq(schema.users.username, hashedUsername))
         .execute();
+      return results;
+    })
     return results.length > 0;
 }
 
@@ -88,13 +90,14 @@ export async function createUser(username: string): Promise<string> {
     // 3. encrypt the totp key with username key
     const encryptedSecret = await encrypt(usernameEncyptionKey, secret);
     // 4. store entry in db
-    const db = await dbPromise;
-    const result = await db.insert(schema.users)
+    const result = await usingDb(async db =>  {
+      return await db.insert(schema.users)
         .values({
             username: hashedUsername,
             totp: encryptedSecret
         })
         .execute();
+    });
     if (result.rowCount !== 1) {
         throw new Error(`Failed to create new user. Got row count of ${result.rowCount}`);
     }
@@ -107,11 +110,12 @@ export async function createAuthCookie({username, otp}: LoginRequest):
     // 1. validate username hash exists in db
     const userEncryptionKey = await getUserKey(username)
     const hashedUsername = await argon2It(userEncryptionKey);
-    const db = await dbPromise;
-    const users = await db.select()
+    const users = await usingDb(async db => {
+      return await db.select()
         .from(schema.users)
         .where(drizzle.eq(schema.users.username, hashedUsername))
         .execute();
+    });
     if (users.length > 1) {
         throw new Error(`Got unexpected user row count of ${users.length}`);
     }
@@ -138,12 +142,15 @@ export async function createAuthCookie({username, otp}: LoginRequest):
     const expiration = Date.now() + (dayInMillis * EXPIRATION_DURATION_DAYS);
     const expiresAt = (new Date(expiration)).toUTCString();
     const sessionId = uuid();
-    const sessionResult = await db.insert(schema.sessions)
+    const sessionResult = await usingDb(async db => {
+      return await db.insert(schema.sessions)
         .values({
             id: sessionId,
             userId: user.id,
             expiresAt
         });
+    });
+
     if (sessionResult.rowCount !== 1) {
         console.log('problem creating session got row count of', sessionResult.rowCount);
         return {success: false, error: LoginError.InternalServerError};
@@ -198,11 +205,13 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
     }
 
     // 4. validate session is not expired
-    const db = await dbPromise;
-    const sessions = await db.select()
+    const sessions = await usingDb(async db => {
+      return await db.select()
         .from(schema.sessions)
         .where(drizzle.eq(schema.sessions.id, sessionId))
         .execute();
+    });
+
     if (sessions.length !== 1) {
         console.log(`no session with id ${sessionId}. auth check failed`);
         return {isAuthed: false, reason: AuthStatusFailureReason.NoSuchSession};

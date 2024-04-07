@@ -2,6 +2,7 @@ import React from 'react';
 import { create } from 'zustand';
 import { ByBit } from '../custom-pages/finance/trading/bybit';
 import { Steps } from '../custom-pages/health/steps';
+import { BodyComp } from '../custom-pages/health/body-comp';
 
 export const navigation: Navigation = {
   curChild: 'Health',
@@ -13,7 +14,7 @@ export const navigation: Navigation = {
         children: {
           Workouts: {isPage: true, page: () => <div>workouts page</div>},
           Steps: {isPage: true, page: Steps},
-          'Body Comp': {isPage: true, page: () => <div>body composition page</div>}
+          'Body Comp': {isPage: true, page: BodyComp}
         }
       }
     },

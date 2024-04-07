@@ -22,8 +22,9 @@ export async function middleware(req: NextRequest, res: NextResponse) {
   if (requiresAuth(url)) {
     const authCookie = req.cookies.get(AUTH_COOKIE_NAME)?.value;
     let authStatus: AuthStatusResponse;
+    let authStatusText: string | undefined;
     try {
-      authStatus = await (
+      authStatusText = await (
         await fetch(
           'http://localhost:3000/api/auth/status', 
           {
@@ -33,11 +34,13 @@ export async function middleware(req: NextRequest, res: NextResponse) {
             }
           }
         )
-      ).json();
+      ).text();
+      authStatus = JSON.parse(authStatusText);
     } catch (e) {
       const error = e as Error;
       console.log(reqid, 'failed to get auth status in middleware');
       console.log(error);
+      console.log(authStatusText ?? 'no auth status text');
       return NextResponse.json({error: error.message}, {status: 500});
     }
     if (!authStatus.isAuthed) {

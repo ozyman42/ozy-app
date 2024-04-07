@@ -1,6 +1,6 @@
 import { t } from './t';
 import { z } from 'zod';
-import { dbPromise, schema, drizzle } from '@ozy/db-schema';
+import { usingDb, schema, drizzle } from '@ozy/db-schema';
 import { v4 as uuid } from 'uuid';
 
 export enum ModStepsError {
@@ -38,10 +38,10 @@ export const modSteps = t.procedure
         if (stepCount <= 0) {
             return {success: false, error: ModStepsError.InvalidSteps};
         }
-        const db = await dbPromise;
         try {
             if (id) {
-                const results = await db.update(schema.steps)
+                const results = await usingDb(db => 
+                  db.update(schema.steps)
                     .set({
                         startTime,
                         endTime,
@@ -51,7 +51,8 @@ export const modSteps = t.procedure
                         drizzle.eq(schema.steps.userId, ctx.userId),
                         drizzle.eq(schema.steps.id, id)
                     ))
-                    .returning({ updatedId: schema.steps.id });
+                    .returning({ updatedId: schema.steps.id })
+                );
                 if (results.length !== 1) {
                     console.log('wrong update number of', results.length);
                     return {success: false, error: ModStepsError.InternalServerError};
@@ -64,7 +65,7 @@ export const modSteps = t.procedure
                 return {success: true, id};
             } else {
                 const newId = uuid();
-                await db.insert(schema.steps)
+                await usingDb(db => db.insert(schema.steps)
                     .values({
                         id: newId,
                         userId: ctx.userId,
@@ -72,7 +73,7 @@ export const modSteps = t.procedure
                         endTime,
                         steps: stepCount
                     })
-                    .execute();
+                    .execute());
                 return {success: true, id: newId};
             }
         } catch(e) {
@@ -88,13 +89,12 @@ export const deleteSteps = t.procedure
         id: z.string()
     }))
     .mutation(async ({ctx, input}) => {
-        const db = await dbPromise;
-        const result = await db.delete(schema.steps)
+        const result = await usingDb(db => db.delete(schema.steps)
             .where(drizzle.and(
                 drizzle.eq(schema.steps.id, input.id),
                 drizzle.eq(schema.steps.userId, ctx.userId)
             ))
-            .returning({deletedStepsId: schema.steps.id});
+            .returning({deletedStepsId: schema.steps.id}));
         if (result.length !== 1) {
             console.log('unexpectedly got the result length of', result.length);
             return {success: false};

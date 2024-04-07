@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APP_VERSION } from '@ozy/constants';
+import { APP_VERSION } from '@/common/server-side/constants';
 
 type Response = {
   version?: string;

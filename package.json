@@ -1,6 +1,7 @@
 {
   "name": "root",
   "scripts": {
+    "start": "pnpm --filter app run dev",
     "app:deploy:dev": "cd packages/app && npx cap run android --verbose",
     "app:regen:dev": "node ./scripts/regen-app.js dev",
     "app:regen:prod": "node ./scripts/regen-app.js prod"

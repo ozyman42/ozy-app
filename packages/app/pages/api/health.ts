@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { APP_VERSION } from '@ozy/constants';
+import { APP_VERSION } from '@/common/server-side/constants';
 import { DevServerStatus, getDevServerStatus } from '@/common/server-side/get-dev-status';
 
 type Response = {

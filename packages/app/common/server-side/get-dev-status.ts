@@ -1,5 +1,5 @@
 import nodeFetch from 'node-fetch';
-import { DEV_PASSTHROUGH_HOSTNAME } from '@ozy/constants';;
+import { DEV_PASSTHROUGH_HOSTNAME } from './constants';
 
 export type DevServerStatus = {
     code: number;
