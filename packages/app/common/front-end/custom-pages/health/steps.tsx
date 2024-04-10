@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { trpc } from '@/common/front-end/clients/trpc';
 import { gql } from '@/common/front-end/clients/graphql';
+import { Pencil } from '@/common/front-end/components/icons/Pencil';
+import { Trash } from '@/common/front-end/components/icons/Trash';
 
 type Item = {
     steps: number;
@@ -15,8 +17,7 @@ export function Steps() {
     const [startDate, setStartDate] = React.useState<Date | undefined>(undefined);
     const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
     const [error, setError] = React.useState<string | undefined>(undefined);
-    const [result, setResult] = React.useState<string>("");
-    const test = gql.subscribe({
+    const stepsData = gql.subscribe({
         steps: {
             user_id: true,
             start_time: true,
@@ -24,6 +25,7 @@ export function Steps() {
             steps: true
         }
     });
+
     const modSteps = trpc.modSteps.useMutation();
     const modActive = 
         steps !== undefined &&
@@ -93,36 +95,22 @@ export function Steps() {
         const result = `${dayHour}:${minute}`;
         return result;
     }
-    async function getGQLQuery() {
-        setResult('loading...');
-        try {
-            /*
-            const hello = await fetch('/v1/graphql', {
-                method: 'POST',
-
-                body: JSON.stringify({
-                    query: `query AnotherOne { steps { id\nuser_id\nstart_time } }`
-                })
-            });
-            setResult(JSON.stringify(await hello.json(), null, 2));
-            */
-           /*
-            const res = await gql.query({
-                steps: {
-                    id: true,
-                    user_id: true
-                }
-            });
-            
-            setResult(JSON.stringify(res, null, 2));
-            */
-        } catch(e) {
-            const error = e as Error;
-            setResult(`Error: ${error.message}`);
+    const timeFrames: Map<number, number> = new Map();
+    if (stepsData !== undefined) {
+      for (const stepData of stepsData.steps) {
+        const start = new Date(stepData.start_time);
+        const daysAgo = (Date.now() - start.getTime()) / 1000 / 60 / 60 / 24;
+        for (const timeFrame of [1, 7, 30, 90, 365]) {
+          if (daysAgo < timeFrame) {
+            if (!timeFrames.has(timeFrame)) {
+              timeFrames.set(timeFrame, 0);
+            }
+            timeFrames.set(timeFrame, timeFrames.get(timeFrame)! + stepData.steps);
+          }
         }
+      }
     }
     return <div>
-        Averages display
         <div className='divider my-1'></div>
         <div className='flex flex-row justify-around h-14'>
             <div className='flex flex-col justify-between px-1' style={{width:'30%'}}>
@@ -173,16 +161,58 @@ export function Steps() {
             </div>
         </div>}
         <div className='divider'></div>
-        <pre className={result.startsWith('Error: ') || result.includes("errors") ? 'bg-red-400' : ''}>
-            {result}
-        </pre>
-        <div className='btn btn-primary mx-auto mt-2' onClick={() => { getGQLQuery(); }}>
-            Click me
+        Average steps over the past
+        <div className='flex flex-row justify-between'>
+          {Array.from(timeFrames.entries()).map(([timeFrame, total]) => {
+            const average = Math.floor(total / timeFrame);
+            return <div key={timeFrame} className='p-1'>
+              <b>{timeFrame} days</b><br />
+              {readableNumber(average)}
+            </div>
+          })}
         </div>
-        <pre>
-            {test === undefined && 'loading...'}
-            {test !== undefined && JSON.stringify(test.steps, null, 2)}
-        </pre>
+        <div className='divider'></div>
+        {stepsData === undefined && 'loading...'}
+        {stepsData !== undefined && 
+        <div className="overflow-x-auto">
+          <table className="table table-zebra">
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>Steps</th>
+                <th>Start</th>
+                <th>End</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stepsData.steps.reverse().map((stepsEntry, i) => {
+                return <tr key={i}>
+                  <td>
+                    <button className="btn btn-circle btn-sm">
+                      <Pencil />
+                    </button>
+                  </td>
+                  <td>
+                    <button className="btn btn-circle btn-sm">
+                      <Trash />
+                    </button>
+                  </td>
+                  <td>{readableNumber(stepsEntry.steps)}</td>
+                  <td>{readableDate(new Date(stepsEntry.start_time))}</td>
+                  <td>{readableDate(new Date(stepsEntry.end_time))}</td>
+                </tr>
+              })}
+            </tbody>
+          </table>
+        </div>}  
     </div>
 }
+
+function readableNumber(n: number) {
+  return n > 1000 ? `${Math.round(n / 100) / 10}k` : n;
+}
  
+function readableDate(d: Date) {
+  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear() - 2000} ${d.getHours()}:${d.getMinutes()}`;
+}

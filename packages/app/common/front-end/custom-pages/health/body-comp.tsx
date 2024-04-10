@@ -39,7 +39,7 @@ const Segments: Record<number, Segment> = {
   18.5: {section: 'Underweight', color: 'bg-accent'},
   24.9: {section: 'Normal', color: 'bg-info'},
   30: {section: 'Overweight', color: 'bg-accent'},
-  40: {section: 'Obese', color: 'bg-error'}
+  35: {section: 'Obese', color: 'bg-error'}
 };
 
 function getCategory(bmi: number): string {
@@ -72,7 +72,7 @@ export function BodyComp() {
       BMI: {bmi}; {getCategory(bmi)}
     </div>
     <SectionedNumberLine
-      start={10}
+      start={12}
       segments={Segments}
       curVal={bmi}
     />
