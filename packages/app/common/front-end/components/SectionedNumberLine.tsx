@@ -33,11 +33,8 @@ export function SectionedNumberLine({segments, start, curVal}: SectionedNumberLi
       return <>
         <div style={{width: `${pctWidth}%`}} key={section} className='align-top'>
           <button className={`cursor-default text-center btn-sm text-xs ${color}`} style={{width: '100%'}}>
-          {section}
+            {section}
           </button>
-          <div className='text-center text-xs' style={{width: '100%'}}>
-            
-          </div>
         </div>
         {i + 1 < segmentsOrdered.length && <Point val={end} start={start} range={range} above={false} />}
       </>

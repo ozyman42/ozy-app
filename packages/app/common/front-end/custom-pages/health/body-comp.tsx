@@ -43,8 +43,9 @@ const Segments: Record<number, Segment> = {
 };
 
 function getCategory(bmi: number): string {
-  for (const upperBound in Segments) {
-    if (bmi < (upperBound as unknown as number)) {
+  const sortedSegments = Object.keys(Segments).map(parseFloat).sort();
+  for (const upperBound of sortedSegments) {
+    if (bmi < upperBound) {
       return Segments[upperBound].section;
     }
   }
