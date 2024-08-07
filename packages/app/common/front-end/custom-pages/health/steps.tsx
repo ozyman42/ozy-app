@@ -153,7 +153,7 @@ export function Steps() {
       setEndDate(new Date(item.end));
     }
     const MODAL_ID = 'ARE_YOU_SURE_STEPS_DELETE';
-    return <div>
+    return <div className='h-full flex flex-col'>
       <dialog id={MODAL_ID} className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Are you sure?</h3>
@@ -249,21 +249,23 @@ export function Steps() {
       <div className='divider'></div>
       {stepsData === undefined && 'loading...'}
       {stepsData !== undefined && 
-      <div className="overflow-x-auto">
-        <table className="table table">
+      <div className='flex flex-col overflow-hidden flex-2 w-full'>
+        <table className="flex h-full overflow-hidden flex-col w-full">
           <thead>
-            <tr>
-              <th></th>
-              <th></th>
-              <th>Steps</th>
-              <th>Start</th>
-              <th>End</th>
+            <tr className='flex flex-row w-full space-between'>
+              <th className='flex-1'></th>
+              <th className='flex-1'></th>
+              <th className='flex-1 text-left'>Steps</th>
+              <th className='flex-1 text-left'>Start</th>
+              <th className='flex-1 text-left'>End</th>
             </tr>
+            <div className='divider m-0'></div>
           </thead>
-          <tbody>
+          <tbody className='overflow-y-scroll'>
             {stepsData.steps.sort((a, b) => new Date(b.start_time).getTime() - new Date(a.start_time).getTime()).map((stepsEntry, i) => {
-              return <tr key={i} className={stepsEntry.id === original?.id ? 'bg-base-200' : ''}>
-                <td>
+              const isSelected = stepsEntry.id === original?.id;
+              return <tr key={i} className={`${isSelected ? 'bg-neutral' : (i % 2 === 1 ? 'bg-base-200' : '')} flex flex-row`}>
+                <td className='flex-1'>
                   <button className="btn btn-circle btn-sm" onClick={() => { edit({
                     id: stepsEntry.id,
                     steps: stepsEntry.steps,
@@ -273,7 +275,7 @@ export function Steps() {
                     <Pencil />
                   </button>
                 </td>
-                <td>
+                <td className='flex-1'>
                   <button className="btn btn-circle btn-sm" onClick={() => {
                     setMaybeDelete({
                       id: stepsEntry.id,
@@ -286,9 +288,15 @@ export function Steps() {
                     <Trash />
                   </button>
                 </td>
-                <td>{readableNumber(stepsEntry.steps)}</td>
-                <td>{readableDate(new Date(stepsEntry.start_time))}</td>
-                <td>{readableDate(new Date(stepsEntry.end_time))}</td>
+                <td className={`flex-1${isSelected ? ' text-neutral-content' : ''}`}>
+                  {readableNumber(stepsEntry.steps)}
+                </td>
+                <td className={`font-mono flex-1${isSelected ? ' text-neutral-content' : ''}`}>
+                  {readableDate(new Date(stepsEntry.start_time))}
+                </td>
+                <td className={`font-mono flex-1${isSelected ? ' text-neutral-content' : ''}`}>
+                  {readableDate(new Date(stepsEntry.end_time))}
+                </td>
               </tr>
             })}
           </tbody>
@@ -302,5 +310,5 @@ function readableNumber(n: number) {
 }
  
 function readableDate(d: Date) {
-  return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear() - 2000} ${d.getHours()}:${d.getMinutes()}`;
+  return `${(d.getMonth() + 1).toString().padStart(2, "0")}/${d.getDate().toString().padStart(2, "0")}/${d.getFullYear() - 2000} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
 }

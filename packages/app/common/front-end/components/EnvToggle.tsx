@@ -27,18 +27,22 @@ enum DevServerStatus {
     offline = 'offline'
 }
 
-enum Env {
+export enum Env {
     prod = 'prod',
     dev = 'dev'
 }
 
-function oppositeEnv(env: Env) {
+export async function setEnvTo(env: Env) {
+  await fetch(`/set-cookie-${env}`);
+}
+
+function oppositeEnv(env: Env): Env {
     const envs = Object.values(Env);
     const idx = envs.indexOf(env);
     return envs[(idx + 1) % envs.length];
 }
 
-function reload(reason: string) {
+export function reload(reason: string) {
     alert(reason);
     window.location.reload();
 }
@@ -152,7 +156,7 @@ export function EnvToggle() {
     async function toggleEnv() {
         if (!curEnv) return;
         if (switching) return;
-        await fetch(`/set-cookie-${oppositeEnv(curEnv)}`);
+        await setEnvTo(oppositeEnv(curEnv));
         setSwitching(true);
     }
     async function signOut() {

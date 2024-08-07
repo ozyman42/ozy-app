@@ -7,6 +7,15 @@ import { BodyComp } from '../custom-pages/health/body-comp';
 export const navigation: Navigation = {
   curChild: 'Health',
   children: {
+    Brainstorm: {
+      isPage: false,
+      navigation: {
+        curChild: 'Images',
+        children: {
+          Images: {isPage: true, page: () => <div>images pages</div>},
+        }
+      }
+    },
     Health: {
       isPage: false,
       navigation: {
@@ -30,13 +39,14 @@ export const navigation: Navigation = {
               children: {
                 Leverage: {isPage: true, page: () => <div>leverage page</div>},
                 Bybit: {isPage: true, page: ByBit},
-                TradingView: {isPage: true, page: () => <div>trading view chart??</div>}
+                Charting: {isPage: true, page: () => <div>trading view chart??</div>}
               }
             }
           },
           Taxes: {isPage: true, page: () => <div>taxes page</div>},
           Debt: {isPage: true, page: () => <div>page showing all my debts</div>},
-          Subscriptions: {isPage: true, page: () => <div>page showing all my subscriptions</div>}
+          Subscriptions: {isPage: true, page: () => <div>page showing all my subscriptions</div>},
+          "Net Worth": {isPage: true, page: () => <div>Net worth tracker</div>}
         }
       }
     },
@@ -48,6 +58,9 @@ export const navigation: Navigation = {
           Contacts: {isPage: true, page: () => <div>Contacts page</div>}
         }
       }
+    },
+    Tasks: {
+      isPage: true, page: () => <div>Todo page</div>
     }
   }
 } as const;

@@ -86,9 +86,15 @@ importers:
       react-dom:
         specifier: ^18
         version: 18.2.0(react@18.2.0)
+      react-error-boundary:
+        specifier: ^4.0.13
+        version: 4.0.13(react@18.2.0)
       react-google-recaptcha-enterprise:
         specifier: ^1.0.3
         version: 1.0.3(react@18.2.0)
+      react-table:
+        specifier: ^7.8.0
+        version: 7.8.0(react@18.2.0)
       tailwindcss-animate:
         specifier: ^1.0.6
         version: 1.0.7(tailwindcss@3.3.2)
@@ -123,6 +129,9 @@ importers:
       '@types/react-dom':
         specifier: ^18
         version: 18.2.6
+      '@types/react-table':
+        specifier: ^7.7.20
+        version: 7.7.20
       '@types/uuid':
         specifier: ^9.0.2
         version: 9.0.2
@@ -547,7 +556,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
-    dev: true
 
   /@babel/template@7.22.5:
     resolution: {integrity: sha512-X7yV7eiwAxdj9k94NEylvbVHLiVG1nvzCV2EAowhxLTwODV1jl9UzZ48leOC0sH7OnuHrIkllaBgneUykIcZaw==}
@@ -2259,6 +2267,12 @@ packages:
 
   /@types/react-dom@18.2.6:
     resolution: {integrity: sha512-2et4PDvg6PVCyS7fuTc4gPoksV58bW0RwSxWKcPRcHZf0PRUGq03TKcD/rUHe3azfV6/5/biUBJw+HhCQjaP0A==}
+    dependencies:
+      '@types/react': 18.2.14
+    dev: true
+
+  /@types/react-table@7.7.20:
+    resolution: {integrity: sha512-ahMp4pmjVlnExxNwxyaDrFgmKxSbPwU23sGQw2gJK4EhCvnvmib2s/O/+y1dfV57dXOwpr2plfyBol+vEHbi2w==}
     dependencies:
       '@types/react': 18.2.14
     dev: true
@@ -7756,6 +7770,15 @@ packages:
       scheduler: 0.23.0
     dev: false
 
+  /react-error-boundary@4.0.13(react@18.2.0):
+    resolution: {integrity: sha512-b6PwbdSv8XeOSYvjt8LpgpKrZ0yGdtZokYwkwV2wlcZbxgopHX/hgPl5VgpnoVOWd868n1hktM8Qm4b+02MiLQ==}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.22.5
+      react: 18.2.0
+    dev: false
+
   /react-google-recaptcha-enterprise@1.0.3(react@18.2.0):
     resolution: {integrity: sha512-pRtKoYTVGCAPGk1TdNfmlZE1l8U0WNUe98h/MV5c0AsYxFRw5U167DldKc/Gfhv4a8pSCiqM8+ZdWQVQnW1vEg==}
     peerDependencies:
@@ -7776,6 +7799,14 @@ packages:
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
+
+  /react-table@7.8.0(react@18.2.0):
+    resolution: {integrity: sha512-hNaz4ygkZO4bESeFfnfOft73iBUj8K5oKi1EcSHPAibEydfsX2MyU6Z8KCr3mv3C9Kqqh71U+DhZkFvibbnPbA==}
+    peerDependencies:
+      react: ^16.8.3 || ^17.0.0-0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /react@18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
@@ -7878,7 +7909,6 @@ packages:
 
   /regenerator-runtime@0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-    dev: true
 
   /regexp-to-ast@0.5.0:
     resolution: {integrity: sha512-tlbJqcMHnPKI9zSrystikWKwHkBqu2a/Sgw01h3zFjvYrMxEDYHzzoMZnUrbIfpTFEsoRnnviOXNCzFiSc54Qw==}
