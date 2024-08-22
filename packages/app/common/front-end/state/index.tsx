@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { ByBit } from '../custom-pages/finance/trading/bybit';
 import { Steps } from '../custom-pages/health/steps';
 import { BodyComp } from '../custom-pages/health/body-comp';
+import { Listening } from '../custom-pages/social/communication/listening';
 
 export const navigation: Navigation = {
   curChild: 'Health',
@@ -55,7 +56,17 @@ export const navigation: Navigation = {
       navigation: {
         curChild: 'Contacts',
         children: {
-          Contacts: {isPage: true, page: () => <div>Contacts page</div>}
+          Contacts: {isPage: true, page: () => <div>Contacts page</div>},
+          Communication: {
+            isPage: false,
+            navigation: {
+              curChild: 'Listening',
+              children: {
+                Listening: {isPage: true, page: Listening},
+                Sharing: {isPage: true, page: () => <div></div>}
+              }
+            }
+          }
         }
       }
     },
