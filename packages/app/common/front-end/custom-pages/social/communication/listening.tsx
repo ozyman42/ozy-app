@@ -60,10 +60,9 @@ export function Listening() {
             <table cellPadding={2}><tbody>
               {
                 Object.entries(cl.checks).map(([desc, checked]) => 
-                  <tr key={desc}>
+                  <tr key={desc} onClick={() => { updateCheck(idx, desc) }}>
                     <td>
-                      <input type='checkbox' checked={checked} 
-                      onClick={() => { updateCheck(idx, desc) }} />
+                      <input type='checkbox' checked={checked} />
                     </td>
                     <td>{desc}</td> 
                   </tr>
