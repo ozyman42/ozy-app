@@ -1,6 +1,7 @@
 import { AUTH_COOKIE_NAME, EXPIRE_AUTH_COOKIE_HEADER } from '@ozy/constants';
+import { usingDb } from '../../../common/server-side/constants';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { usingDb, schema, drizzle } from '@ozy/db-schema';
+import { schema, drizzle } from '@ozy/db-schema';
 
 enum SignOutError {
     FailedToDeleteSession = 'FailedToDeleteSession'

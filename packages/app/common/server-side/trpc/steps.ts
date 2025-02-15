@@ -1,7 +1,8 @@
 import { t } from './t';
 import { z } from 'zod';
-import { usingDb, schema, drizzle } from '@ozy/db-schema';
+import { schema, drizzle } from '@ozy/db-schema';
 import { v4 as uuid } from 'uuid';
+import { usingDb } from '../constants';
 
 export enum ModStepsError {
     InvalidSteps = 'InvalidSteps',

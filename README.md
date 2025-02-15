@@ -26,6 +26,14 @@ This app helps keep track of all of life's averages. Eventually I would like to 
 - Envoy to switch between proxying to prod versus the codespace (basically I can hot reload develop using the public domain name)
 - Tailscale to connect phone to codespace to prod deployment
 
+# Dev Mode 2025
+
+1. Connect local machine to tailscale
+2. Add machine's virtual tailscale IP address as A record to `codespace` Host
+3. Grab the `HCP_CLIENT_SECRET` env var from railway and add to local env along with `APP_VERSION=dev` and `PORT=3000`
+4. `pnpm start`
+5. Visit https://beta.ozy.xyz. You should see the dev mode toggle available
+
 # Codespaces
 
 Run the following on startup:

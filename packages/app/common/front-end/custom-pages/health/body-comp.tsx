@@ -2,8 +2,12 @@ import * as React from 'react';
 import { SectionedNumberLine, Segment } from '@/common/front-end/components/SectionedNumberLine';
 
 const birthday = new Date('05/28/1996'); // TODO: move to db
-const yearInMillis = 1000 * 60 * 60 * 24 * 365; // TODO: account for leap years (just use some lib)
-const defaultAge = Math.floor(((new Date()).getTime() - birthday.getTime()) / yearInMillis);
+const now = new Date();
+let age = now.getFullYear() - birthday.getFullYear();
+if (now.getMonth() < birthday.getMonth() || (now.getMonth() === birthday.getMonth() && now.getDate() < birthday.getDate())) {
+  age--;
+}
+const defaultAge = age;
 
 type NumSliderProps = {
   label: string;
@@ -54,7 +58,7 @@ function getCategory(bmi: number): string {
 
 export function BodyComp() {
   const [age, setAge] = React.useState(defaultAge);
-  const [weight, setWeight] = React.useState(160);
+  const [weight, setWeight] = React.useState(135);
   const [height, setHeight] = React.useState(5 * 12 + 6.5);
 
   function heightDisplay(inches: number): string {

@@ -1,4 +1,4 @@
-import { usingDb } from './';
+import { usingDbThruPublicInternet as usingDb } from './';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
 async function main() {

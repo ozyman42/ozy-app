@@ -7,6 +7,7 @@ import { LoginError, LoginRequest, LoginResponse, SIGN_UP_RECAPTCHA_ACTION, Sign
 import * as React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { MAIN_APP_PAGE_PATH } from '@ozy/constants';
+import { Secrets, getSecret } from '@ozy/constants/src/secrets';
 
 type LoginProps = {
     recaptchaSiteKey: string
@@ -166,8 +167,9 @@ export default function Login({recaptchaSiteKey}: LoginProps) {
 }
 
 export async function getServerSideProps() {
-    const props: LoginProps= {
-        recaptchaSiteKey: process.env.RECAPTCHA_ID!
-    };
-    return { props };
+  const recaptchaId = await getSecret(Secrets.RecaptchaId);
+  const props: LoginProps= {
+    recaptchaSiteKey: recaptchaId
+  };
+  return { props };
 }

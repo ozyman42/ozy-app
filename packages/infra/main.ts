@@ -7,9 +7,10 @@ class MyStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
+    /*
     const providerName = `${ozy.APP_NAME}-cockroach-provider`;
     new provider.CockroachProvider(this, providerName, {
-      apikey: process.env.OZY_COCKROACH_DB_API_KEY
+      apikey: OZY_COCKROACH_DB_API_KEY
     });
 
     const clusterName = `${ozy.APP_NAME}-cockroach-cluster`;

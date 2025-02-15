@@ -1,6 +1,5 @@
-import { usingDb, schema, drizzle } from './';
+import { usingDbThruPublicInternet as usingDb, schema, drizzle } from './';
 import { sql } from 'drizzle-orm';
-import * as crypto from 'crypto';
 
 async function main() {
     async function LIST_TABLES() {

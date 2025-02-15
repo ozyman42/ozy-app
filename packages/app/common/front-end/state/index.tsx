@@ -4,6 +4,7 @@ import { ByBit } from '../custom-pages/finance/trading/bybit';
 import { Steps } from '../custom-pages/health/steps';
 import { BodyComp } from '../custom-pages/health/body-comp';
 import { Listening } from '../custom-pages/social/communication/listening';
+import { Boundaries } from '../custom-pages/health/boundaries';
 
 export const navigation: Navigation = {
   curChild: 'Health',
@@ -24,7 +25,8 @@ export const navigation: Navigation = {
         children: {
           Workouts: {isPage: true, page: () => <div>workouts page</div>},
           Steps: {isPage: true, page: Steps},
-          'Body Comp': {isPage: true, page: BodyComp}
+          'Body Comp': {isPage: true, page: BodyComp},
+          Boundaries: {isPage: true, page: Boundaries}
         }
       }
     },
@@ -165,7 +167,7 @@ export const useStore = create<Store>((set, get) => ({
     while (true) {
       fullPath.push(navNode.curChild);
       const next = navNode.children[navNode.curChild];
-      if (next.isPage) break;
+      if (!next || next.isPage) break;
       navNode = next.navigation;
     }
     const curLocalState = localGet();

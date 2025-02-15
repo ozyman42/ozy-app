@@ -1,15 +1,15 @@
 import { AuthStatusFailureReason, AuthStatusResponse, LoginError, LoginRequest } from '../universal/api-interfaces';
 import { authenticator } from 'otplib';
-import { usingDb, schema, drizzle } from '@ozy/db-schema';
+import { schema, drizzle } from '@ozy/db-schema';
 import * as crypto from 'crypto';
 import * as argon2 from 'argon2';
 import { v4 as uuid } from 'uuid';
 import * as jsonwebtoken from 'jsonwebtoken';
+import { usingDb } from './constants';
+import { Secrets, getSecret } from '@ozy/constants/src/secrets';
 
 const ENCRYPTION_ALGO = 'aes-256-cbc';
 const EXPIRATION_DURATION_DAYS = 15;
-const AUTH_KEY = process.env.OZY_AUTH_KEY!;
-const PEPPER = process.env.OZY_PEPPER!;
 
 type JWT = {
     sessionId: string;
@@ -46,12 +46,13 @@ export async function decrypt(key: string, value: string): Promise<string> {
 async function argon2It(value: string)  {
     const sha256 = await hash(value);
     const shaBuffer = Buffer.from(sha256, 'hex');
+    const pepper = await getSecret(Secrets.OzyAppPepper);
     return argon2.hash(value, {
         type: argon2.argon2d,
         memoryCost: 2 ** 16,
         hashLength: 50,
         salt: shaBuffer.subarray(shaBuffer.length - 16),
-        secret: Buffer.from(PEPPER, 'hex')
+        secret: Buffer.from(pepper, 'hex')
     });
 }
 
@@ -63,8 +64,12 @@ export async function hash(value: string, ...values: string[]): Promise<string> 
     return curHash.digest('hex');
 }
 
-export function getUserKey(username: string) {
-    return hash(username, AUTH_KEY);
+async function getAuthKey() {
+    return getSecret(Secrets.OzyAppAuthKey);
+}
+
+export async function getUserKey(username: string) {
+    return hash(username, await getAuthKey());
 }
 
 export async function usernameExists(username: string): Promise<boolean> {
@@ -161,10 +166,11 @@ export async function createAuthCookie({username, otp}: LoginRequest):
     };
 
     // 5. Sign JWT
-    const signedJWT = jsonwebtoken.sign(jwt, AUTH_KEY);
+    const authKey = await getAuthKey();
+    const signedJWT = jsonwebtoken.sign(jwt, authKey);
 
     // 6. Encrypt then return as cookie
-    const cookie = await encrypt(AUTH_KEY, signedJWT);
+    const cookie = await encrypt(authKey, signedJWT);
 
     return {success: true, cookie, expiry: expiresAt};
 }
@@ -175,9 +181,10 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
     }
     
     // 1. decrypt cookie
+    const authKey = await getAuthKey();
     let signedJWT
     try {
-        signedJWT = await decrypt(AUTH_KEY, authCookie);
+        signedJWT = await decrypt(authKey, authCookie);
     } catch (e) {
         const error = e as Error;
         console.log('failed to decrypt auth cookie', e);
@@ -187,7 +194,7 @@ export async function isAuthenticated(authCookie?: string): Promise<AuthStatusRe
     // 2. validate JWT is signed
     let jwt: JWT;
     try {
-        jwt = jsonwebtoken.verify(signedJWT, AUTH_KEY) as JWT;
+        jwt = jsonwebtoken.verify(signedJWT, authKey) as JWT;
     } catch(e) {
         const error = e as Error;
         console.log('failed to verify signed jwt', e);

@@ -2,6 +2,7 @@
   "name": "@ozy/db-schema",
   "main": "src",
   "dependencies": {
+    "@ozy/constants": "workspace:*",
     "drizzle-orm": "^0.27.2",
     "pg": "^8.11.3"
   },

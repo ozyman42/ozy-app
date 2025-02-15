@@ -2,6 +2,12 @@
   "name": "@ozy/constants",
   "main": "src",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^20.3.3"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "ts-results": "^3.3.0",
+    "zod": "^3.22.4"
   }
 }

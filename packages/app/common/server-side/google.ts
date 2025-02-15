@@ -1,11 +1,17 @@
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import * as path from 'path';
+import { Secrets, getSecret } from '@ozy/constants/src/secrets';
 
-function write(pathStr: string, contents: string) {
-    fs.mkdirSync(path.dirname(pathStr), {recursive: true});
-    fs.writeFileSync(pathStr, contents);
+async function write(pathStr: string, contents: string) {
+    await fs.mkdir(path.dirname(pathStr), {recursive: true});
+    await fs.writeFile(pathStr, contents);
 }
 
-export const GOOGLE_CREDS_PATH = path.resolve(__dirname, 'secrets/google.json');
-process.env.GOOGLE_APPLICATION_CREDENTIALS = GOOGLE_CREDS_PATH;
-write(GOOGLE_CREDS_PATH, process.env.OZY_GOOGLE_CLOUD_SERVICE_ACCOUNT!);
+async function setup() {
+  const GOOGLE_CREDS_PATH = path.resolve(__dirname, 'secrets/google.json');
+  process.env.GOOGLE_APPLICATION_CREDENTIALS = GOOGLE_CREDS_PATH;
+  const googleCloudServiceAccount = await getSecret(Secrets.GoogleCloudServiceAccount);
+  await write(GOOGLE_CREDS_PATH, googleCloudServiceAccount);
+}
+
+export const googleIsSetup = setup();
