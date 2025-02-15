@@ -9,9 +9,6 @@ const libs = new Set(['devDependencies', 'dependencies']
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    logging: "verbose",
-  },
   reactStrictMode: true,
   webpack(config, { isServer }) {
     if (!isServer) {

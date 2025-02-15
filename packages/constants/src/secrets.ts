@@ -134,12 +134,12 @@ async function tempAccessToken() {
 
 const secretCache = new Map<string, string>();
 async function fetchSecretFromHashicorp(secret: Secrets): Promise<string | undefined> {
-  console.log('fetching all secrets');
   const accessToken = await tempAccessToken();
   const secretsResponse = (await (await fetch(
-    `https://api.cloud.hashicorp.com/secrets/2023-11-28/organizations/${HCP_ORG_ID}/projects/${HCP_PROJECT_ID}/apps/${HCP_APP_NAME}/secrets:open`, {
+    'http://localhost:5000', {
     headers: {
-      'Authorization': `Bearer ${accessToken}`
+      'Authorization': `Bearer ${accessToken}`,
+      'x-target-url': `https://api.cloud.hashicorp.com/secrets/2023-11-28/organizations/${HCP_ORG_ID}/projects/${HCP_PROJECT_ID}/apps/${HCP_APP_NAME}/secrets:open`
     },
     cache: 'force-cache'
   })).json());

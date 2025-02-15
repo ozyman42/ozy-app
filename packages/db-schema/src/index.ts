@@ -7,7 +7,6 @@ const poolCache = new Map<string, Pool>();
 async function getPool(dbUrl: string) {
   const cachedPool = poolCache.get(dbUrl);
   if (cachedPool) return cachedPool;
-  console.log('Creating a new pool');
   const pool = new Pool({
     connectionString: dbUrl
   });

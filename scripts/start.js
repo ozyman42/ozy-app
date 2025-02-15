@@ -57,6 +57,10 @@ function run(name, command, env, opts = {mayExit: false, pipeOut: true}) {
     });
 }
 
+function wait(seconds) {
+  return new Promise(resolve => {setTimeout(resolve, 1000 * seconds);});
+}
+
 async function start() {
   const tailScaleDir = path.resolve('/var/lib/tailscale');
   fs.mkdirSync(tailScaleDir, {recursive: true});
@@ -68,7 +72,9 @@ async function start() {
   run("tsd", "tailscaled --tun=userspace-networking --socks5-server=localhost:1055", {}, {mayExit: false, pipeOut: false});
   const secondsToWait = 5;
   console.log(`waiting ${secondsToWait} seconds`);
-  await (new Promise(resolve => {setTimeout(resolve, 1000 * secondsToWait);}));
+  await wait(secondsToWait);
+  run('hcp-cache', 'node ../../scripts/hashicorp-cache.js');
+  await wait(1);
   run("tsup", "tailscale up --hostname=$TAIL_SCALE_MACHINE_NAME --ssh --accept-routes --auth-key=$TAIL_SCALE_AUTH_KEY", {}, {mayExit: true, pipeOut: false});
   run("next app", "pnpm next start", {PORT: 3000});
   run("http2socks5", "node ../../scripts/socks-passthrough.js 4000 http://codespace.ozy.xyz:3000");

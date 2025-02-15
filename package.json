@@ -2,13 +2,16 @@
   "name": "root",
   "scripts": {
     "start": "pnpm --filter app run dev",
+    "hcp-cache": "node ./scripts/hashicorp-cache.js",
     "app:deploy:dev": "cd packages/app && npx cap run android --verbose",
     "app:regen:dev": "node ./scripts/regen-app.js dev",
     "app:regen:prod": "node ./scripts/regen-app.js prod"
   },
   "dependencies": {
+    "express": "^4.21.2",
     "fast-xml-parser": "^4.3.3",
     "http-proxy": "1.18.1",
+    "node-fetch": "^3.3.2",
     "png-to-ico": "^2.1.8",
     "socks-proxy-agent": "8.0.2"
   }

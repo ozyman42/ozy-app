@@ -31,7 +31,8 @@ This app helps keep track of all of life's averages. Eventually I would like to 
 1. Connect local machine to tailscale
 2. Add machine's virtual tailscale IP address as A record to `codespace` Host
 3. Grab the `HCP_CLIENT_SECRET` env var from railway and add to local env along with `APP_VERSION=dev` and `PORT=3000`
-4. `pnpm start`
+4. Run `pnpm hcp-cache` in one terminal
+4. Run `pnpm start` in another
 5. Visit https://beta.ozy.xyz. You should see the dev mode toggle available
 
 # Codespaces
