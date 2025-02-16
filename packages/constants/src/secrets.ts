@@ -50,16 +50,23 @@ class PersistentCache {
   private static TABLE_NAME = 'kv_store';
   private static KEY_COL_NAME = 'k';
   private static VAL_COL_NAME = 'v';
-  private db: import('better-sqlite3').Database;
+  private db: Promise<import('better-sqlite3').Database>;
+  private dbResolve: (db: import('better-sqlite3').Database) => void = () => {};
+  public constructor() {
+    this.db = new Promise(resolve => {
+      this.dbResolve = resolve;
+    });
+  }
   public async init() {
     const path = await import('path');
     const cachePath = path.resolve(__dirname, 'cache.sql');
     console.log('cache path of', cachePath);
     const SQLite = await import('better-sqlite3');
     console.log()
-    this.db = new SQLite(cachePath, {});
+    this.dbResolve(new (SQLite as any).default(cachePath, {}));
     const {TABLE_NAME, KEY_COL_NAME, VAL_COL_NAME} = PersistentCache;
-    const info = this.db.prepare(
+    const db = await this.db;
+    const info = db.prepare(
       `CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (${KEY_COL_NAME} STRING PRIMARY KEY, ${VAL_COL_NAME} STRING);`
     ).run();
     console.log('created?', info.changes);
@@ -67,7 +74,8 @@ class PersistentCache {
 
   public async get(k: string): Promise<string | undefined> {
     const {TABLE_NAME, KEY_COL_NAME, VAL_COL_NAME} = PersistentCache;
-    const statement = this.db.prepare(`SELECT ${VAL_COL_NAME} FROM ${TABLE_NAME} WHERE ${KEY_COL_NAME} = ?`);
+    const db = await this.db;
+    const statement = db.prepare(`SELECT ${VAL_COL_NAME} FROM ${TABLE_NAME} WHERE ${KEY_COL_NAME} = ?`);
     const result = statement.get(k);
     console.log('result of', result);
     return undefined;
@@ -75,7 +83,8 @@ class PersistentCache {
 
   public async set(k: string, v: string) {
     const {TABLE_NAME, KEY_COL_NAME, VAL_COL_NAME} = PersistentCache;
-    const statement = this.db.prepare(`INSERT OR REPLACE INTO ${TABLE_NAME} (${KEY_COL_NAME}, ${VAL_COL_NAME}) VALUES (?, ?)`);
+    const db = await this.db;
+    const statement = db.prepare(`INSERT OR REPLACE INTO ${TABLE_NAME} (${KEY_COL_NAME}, ${VAL_COL_NAME}) VALUES (?, ?)`);
     const info = statement.run(k, v);
     console.log('inserted?', info.changes);
   }
