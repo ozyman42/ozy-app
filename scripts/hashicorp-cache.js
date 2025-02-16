@@ -1,5 +1,4 @@
 const express = require('express');
-const fetch = require('node-fetch').default;
 
 const app = express();
 const port = 5000;
